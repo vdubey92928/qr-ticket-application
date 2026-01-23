@@ -5,21 +5,22 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.vivekanand.qrticket.enums.TicketStatus;
+import com.vivekanand.qrticket.enums.TicketType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "entry_logs", indexes = { @Index(name = "idx_entrylog_ticket_id", columnList = "ticket_id"),
-		@Index(name = "idx_entrylog_scanned_at", columnList = "scanned_at") })
+@Table(name = "entry_logs")
 public class EntryLog {
 
 	@Id
@@ -32,10 +33,23 @@ public class EntryLog {
 	private Ticket ticket;
 
 	@Column(name = "scan_result", nullable = false, length = 20)
-	private TicketStatus scanResult; // VALID, PREVIOUSLY_USED, NOT_EXISTS
+	@Enumerated(EnumType.STRING)
+	private TicketStatus scanResult;
 
 	@Column(name = "scanned_at", nullable = false)
 	private LocalDateTime scannedAt;
+	
+	@Column( nullable = false, length = 20)
+	@Enumerated(EnumType.STRING)
+	private TicketType type;
+
+	public TicketType getType() {
+		return type;
+	}
+
+	public void setType(TicketType type) {
+		this.type = type;
+	}
 
 	@PrePersist
 	protected void onScan() {

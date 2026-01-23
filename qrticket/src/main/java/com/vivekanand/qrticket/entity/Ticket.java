@@ -4,8 +4,12 @@ package com.vivekanand.qrticket.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vivekanand.qrticket.enums.TicketType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -36,6 +40,24 @@ public class Ticket {
 
 	@Column(name = "used_at")
 	private LocalDateTime usedAt;
+	
+	@Column(nullable = false, length = 20)
+	@Enumerated(EnumType.STRING)
+	private TicketType type;
+	
+	
+
+	public TicketType getType() {
+		return type;
+	}
+
+	public void setType(TicketType type) {
+		this.type = type;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 
 	public UUID getId() {
 		return id;

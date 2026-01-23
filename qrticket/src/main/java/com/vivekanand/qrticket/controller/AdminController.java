@@ -49,9 +49,7 @@ public class AdminController {
         return entryLogRepository.findAll();
     }
 
-    /**
-     * Get entry logs for a specific ticket
-     */
+  
     @GetMapping("/entry-logs/{ticketId}")
     public List<EntryLog> getLogsByTicket(@PathVariable UUID ticketId) {
 

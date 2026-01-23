@@ -1,14 +1,18 @@
 import { useState, useRef } from "react";
 import axiosClient from "../api/axiosClient";
 import TicketQrView from "./TicketQrView";
+import './../assets/css/ticket.css'
 
 const GenerateTicket = () => {
+
+    const ticketRefs = useRef({});
+
+
     const [formData, setFormData] = useState({
         adults: 0,
         kids: 0,
-        vehicleType: "",
     });
-    const printRef = useRef();
+
 
 
     const [tickets, setTickets] = useState(null);
@@ -27,53 +31,53 @@ const GenerateTicket = () => {
     };
 
     // ---------------- PRINT SINGLE TICKET ----------------
-    const printTicket = () => {
-        const printContent = printRef.current.outerHTML;
+    const printTicket = (ticketId) => {
+        const ref = ticketRefs.current[ticketId];
+        if (!ref) return;
+
+        const printContent = ref.outerHTML;
         const printWindow = window.open("", "_blank");
 
         printWindow.document.write(`
-        <html>
-        <head>
-            <title>Print Ticket</title>
-            <style>
-                @page {
-                    margin: 0;
-                }
-                body {
-                    margin: 0;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 50vh;
-                }
-            </style>
-        </head>
-        <body>
-            ${printContent}
+    <html>
+    <head>
+      <title>Print Ticket</title>
+      <style>
+        @page { margin: 0; }
+        body {
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 50vh;
+        }
+      </style>
+    </head>
+    <body>
+      ${printContent}
 
-            <script>
-                const img = document.querySelector("img");
+      <script>
+        const img = document.querySelector("img");
+        if (img.complete) {
+          triggerPrint();
+        } else {
+          img.onload = triggerPrint;
+        }
 
-                // WAIT for QR image to load
-                if (img.complete) {
-                    triggerPrint();
-                } else {
-                    img.onload = triggerPrint;
-                }
-
-                function triggerPrint() {
-                    setTimeout(() => {
-                        window.print();
-                        window.onafterprint = () => window.close();
-                    }, 100);
-                }
-            </script>
-        </body>
-        </html>
-    `);
+        function triggerPrint() {
+          setTimeout(() => {
+            window.print();
+            window.onafterprint = () => window.close();
+          }, 100);
+        }
+      </script>
+    </body>
+    </html>
+  `);
 
         printWindow.document.close();
     };
+
 
 
 
@@ -82,62 +86,43 @@ const GenerateTicket = () => {
     const handleGenerate = async (e) => {
         e.preventDefault();
 
-        const generatedTickets = {
-            adult: [],
-            kid: [],
-            vehicle: null,
-        };
-
-        const time = Date.now();
-
-        // Adult tickets
-        for (let i = 0; i < formData.adults; i++) {
-            const response = await axiosClient.post("/api/ticket/generate");
-            generatedTickets.adult.push({
-                id: response.data.id,
-                type: "ADULT",
-            });
-        }
-
-        // Kid tickets
-        for (let i = 0; i < formData.kids; i++) {
-            const response = await axiosClient.post("/api/ticket/generate");
-            generatedTickets.kid.push({
-                id: response.data.id,
-                type: "KID",
-            });
-        }
-
-        // Vehicle ticket (only one)
-        if (formData.vehicleType) {
-            const response = await axiosClient.post("/api/ticket/generate");
-            generatedTickets.vehicle = {
-                id: response.data.id,
-                type: formData.vehicleType,
-            };
-        }
-
-        setTickets(generatedTickets);
-
-        // ✅ JSON PAYLOAD (for backend)
         const payload = {
             adult: formData.adults,
             kid: formData.kids,
-            vehicle: formData.vehicleType || null,
         };
 
-        console.log("JSON SENT TO BACKEND:", payload);
+        const response = await axiosClient.post("/api/ticket/generate", payload);
+        const data = response.data; // ARRAY
+
+        const generatedTickets = {
+            adult: [],
+            kid: [],
+        };
+
+        let index = 0;
+
+        for (let i = 0; i < formData.adults; i++) {
+            generatedTickets.adult.push(data[index++]);
+        }
+
+        for (let i = 0; i < formData.kids; i++) {
+            generatedTickets.kid.push(data[index++]);
+        }
+
+        setTickets(generatedTickets);
     };
+
 
     return (
         <div className="container py-5">
-            <h2 className="text-center fw-bold mb-4">
-                Generate QR Tickets
-            </h2>
+
 
             {/* ================= FORM ================= */}
             {!tickets && (
                 <div className="row justify-content-center">
+                    <h2 className="text-center fw-bold mb-4">
+                        Generate QR Tickets
+                    </h2>
                     <div className="col-md-6">
                         <div className="card shadow-sm">
                             <div className="card-body">
@@ -171,29 +156,12 @@ const GenerateTicket = () => {
                                         />
                                     </div>
 
-                                    <div className="mb-3">
-                                        <label className="form-label">
-                                            Vehicle Type (if any)
-                                        </label>
-                                        <select
-                                            className="form-select"
-                                            name="vehicleType"
-                                            value={formData.vehicleType}
-                                            onChange={handleChange}
-                                        >
-                                            <option value="">None</option>
-                                            <option value="BIKE">Bike</option>
-                                            <option value="CAR">Car</option>
-                                            <option value="BUS">Bus</option>
-                                        </select>
-                                    </div>
 
                                     <button
                                         type="submit"
                                         className="btn btn-primary w-100"
                                         disabled={
-                                            formData.adults + formData.kids === 0 &&
-                                            !formData.vehicleType
+                                            formData.adults + formData.kids === 0
                                         }
                                     >
                                         Generate Tickets
@@ -210,120 +178,67 @@ const GenerateTicket = () => {
                 <div className="mt-5">
 
                     {/* ADULT TICKETS */}
-                    {tickets.adult.length > 0 && (
-                        <>
-                            <h4 className="fw-bold mb-3">
-                                Adult Tickets ({tickets.adult.length})
-                            </h4>
-                            <div className="row g-3">
+                    {tickets.adult.map((ticket) => (
+                        <div className="row">
+                            <div key={ticket.id} className="col-md-4 mx-auto">
+                                <div className="card text-center shadow-sm">
+                                    <div className="card-body">
 
-                                {tickets.adult.map((ticket) => (
-                                    <div key={ticket.id} className="col-md-4">
-                                        <div className="card text-center shadow-sm">
-                                            <div className="card-body">
-                                                {/* <h6>{ticket.type} Ticket </h6> */}
-                                                {/* <p className="small">{ticket.id}</p> */}
-                                                <div
-                                                    className="d-flex align-items-center justify-content-center mb-2"
-                                                    style={{ border: "1px dashed #ccc" }}
-                                                >
-                                                    <TicketQrView
-                                                        ref={printRef}
-                                                        ticket={ticket.id}
-                                                        type={ticket.type}
-                                                    />
-
-
-                                                </div>
-                                                <button
-                                                    className="btn btn-outline-dark btn-sm"
-                                                    onClick={() => printTicket(ticket)}
-                                                >
-                                                    Print
-                                                </button>
-                                            </div>
+                                        <div
+                                            className="d-flex align-items-center justify-content-center mb-2"
+                                            style={{ border: "1px dashed #ccc" }}
+                                        >
+                                            <TicketQrView
+                                                ref={(el) => (ticketRefs.current[ticket.id] = el)}
+                                                ticketData={ticket}
+                                            />
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    )}
 
-                    {/* KID TICKETS */}
-                    {tickets.kid.length > 0 && (
-                        <>
-                            <h4 className="fw-bold mt-5 mb-3">
-                                Kid Tickets ({tickets.kid.length})
-                            </h4>
-                            <div className="row g-3">
-                                {tickets.kid.map((ticket) => (
-                                    <div key={ticket.id} className="col-md-4">
-                                        <div className="card text-center shadow-sm">
-                                            <div className="card-body">
-                                                {/* <h6>{ticket.type} Ticket </h6> */}
-                                                {/* <p className="small">{ticket.id}</p> */}
-                                                <div
-                                                    className="d-flex align-items-center justify-content-center mb-2"
-                                                    style={{ border: "1px dashed #ccc" }}
-                                                >
-                                                    <TicketQrView
-                                                        ref={printRef}
-                                                        ticket={ticket.id}
-                                                        type={ticket.type}
-                                                    />
-
-
-                                                </div>
-                                                <button
-                                                    className="btn btn-outline-dark btn-sm"
-                                                    onClick={() => printTicket(ticket)}
-                                                >
-                                                    Print
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    )}
-
-                    {/* VEHICLE TICKET */}
-                    {tickets.vehicle && (
-                        <>
-                            <h4 className="fw-bold mt-5 mb-3">
-                                Vehicle Ticket
-                            </h4>
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <div className="card text-center shadow-sm">
-                                        <div className="card-body">
-                                            <h6>{tickets.vehicle.type}</h6>
-                                            <p className="small">{tickets.vehicle.id}</p>
-                                            <div
-                                                className="d-flex align-items-center justify-content-center mb-2"
-                                                style={{ border: "1px dashed #ccc" }}
-                                            >
-                                                <TicketQrView
-                                                    ref={printRef}
-                                                    ticket={tickets.vehicle.id}
-                                                    type={tickets.vehicle.type}
-                                                />
-
-
-                                            </div>
-                                            <button
-                                                className="btn btn-outline-dark btn-sm"
-                                                onClick={() => printTicket(tickets.vehicle)}
-                                            >
-                                                Print
-                                            </button>
-                                        </div>
+                                        <button
+                                            className="btn btn-outline-dark btn-sm"
+                                            onClick={() => window.alert("Abhi implement krna h iska logic")}
+                                        >
+                                            Print
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </>
-                    )}
+                        </div>
+                    ))}
+
+
+                    {/* KID TICKETS */}
+                    {tickets.kid.map((ticket) => (
+                        <div className="row">
+                            <div key={ticket.id} className="col-md-4 mx-auto">
+                                <div className="card text-center shadow-sm">
+                                    <div className="card-body">
+
+                                        <div
+                                            className="d-flex align-items-center justify-content-center mb-2"
+                                            style={{ border: "1px dashed #ccc" }}
+                                        >
+                                            <TicketQrView
+                                                ref={(el) => (ticketRefs.current[ticket.id] = el)}
+                                                ticketData={ticket}
+                                            />
+                                        </div>
+
+                                        <button
+                                            className="btn btn-outline-dark btn-sm"
+                                            onClick={() => window.alert("Abhi implement krna h iska logic")}
+                                        >
+                                            Print
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+
+                    {/* VEHICLE TICKET */}
+
 
                 </div>
             )

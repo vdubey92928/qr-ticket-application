@@ -1,5 +1,6 @@
 package com.vivekanand.qrticket.controller;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vivekanand.qrticket.dto.TicketInfo;
 import com.vivekanand.qrticket.dto.TicketValidationRequestDto;
 import com.vivekanand.qrticket.dto.TicketValidationResponseDto;
+import com.vivekanand.qrticket.dto.TotalTicket;
 import com.vivekanand.qrticket.entity.Ticket;
 import com.vivekanand.qrticket.enums.TicketStatus;
+import com.vivekanand.qrticket.enums.TicketType;
 import com.vivekanand.qrticket.repository.TicketRepository;
 import com.vivekanand.qrticket.service.TicketService;
 import com.vivekanand.qrticket.util.QRCodeGenerator;
@@ -41,25 +45,43 @@ public class TicketController {
      * POST /api/tickets
      */
     @PostMapping("/generate")
-    public ResponseEntity<Ticket> generateTicket() {
+    public ResponseEntity<List<TicketInfo>> generateTickets(@RequestBody TotalTicket totalTicket) {
 
-        Ticket ticket = ticketService.generateTicket();
-        return new ResponseEntity<>(ticket, HttpStatus.CREATED);
+    	List<TicketInfo> tickets = ticketService.generateTicket(totalTicket);
+        return new ResponseEntity<>(tickets, HttpStatus.CREATED);
     }
 
     /**
      * Get QR code for a ticket
      * GET /api/tickets/{id}/qr
      */
+    @GetMapping("getDetail/{id}")
+    public ResponseEntity<TicketInfo> getQrImg(@PathVariable UUID id){
+    	
+    	Optional<Ticket> optionalTicket = ticketRepository.findById(id);
+
+        if (optionalTicket.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        
+        Ticket ticket = optionalTicket.get();
+        
+        TicketInfo ticketInfo = new TicketInfo(); 
+        ticketInfo.setCreatedAt(ticket.getCreatedAt());
+        ticketInfo.setVisitDate(ticket.getVisitDate());
+        ticketInfo.setId(ticket.getId());
+        ticketInfo.setType(ticket.getType());
+        ticketInfo.setPrice((ticket.getType() == TicketType.ADULT)?15:0) ;
+        
+        ticketInfo.setQrImage(QRCodeGenerator.generateQrPng(ticket.getQrHash()));
+    	
+    	return ResponseEntity.ok(ticketInfo);
+    }
+    
     @GetMapping("get/{id}")
     public ResponseEntity<byte[]> getTicketQr(@PathVariable UUID id) {
-
         Optional<Ticket> optionalTicket = ticketRepository.findById(id);
 
-        if (optionalTicket.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
+        if (optionalTicket.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        
         Ticket ticket = optionalTicket.get();
 
         byte[] qrImage = QRCodeGenerator.generateQrPng(ticket.getQrHash());
@@ -85,9 +107,14 @@ public class TicketController {
                 return ResponseEntity.ok(
                         new TicketValidationResponseDto("VALID", "Entry allowed")
                 );
+                
+            case EXPIRED:
+                return ResponseEntity.ok(
+                        new TicketValidationResponseDto("EXPIRED", "Entry Not allowed")
+                );
+
 
             case PREVIOUSLY_USED:
-            	System.out.println("request aae h");
                 return ResponseEntity.ok(new TicketValidationResponseDto(
                                 "PREVIOUSLY_USED",
                                 "Ticket already used"

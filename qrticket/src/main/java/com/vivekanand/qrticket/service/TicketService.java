@@ -2,13 +2,16 @@ package com.vivekanand.qrticket.service;
 
 
 
-import com.vivekanand.qrticket.entity.Ticket;
+import java.util.List;
+
+import com.vivekanand.qrticket.dto.TicketInfo;
+import com.vivekanand.qrticket.dto.TotalTicket;
 import com.vivekanand.qrticket.enums.TicketStatus;
 
 public interface TicketService {
 	
 	
-	Ticket generateTicket();
+	List<TicketInfo> generateTicket(TotalTicket totalTicket);
 	
 	TicketStatus validateTicket(String qrHash);
 

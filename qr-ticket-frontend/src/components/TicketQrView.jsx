@@ -1,91 +1,76 @@
+import React, { useEffect, useState } from "react";
+import ldaLogo from "../../public/logos/lda.png";
+import axiosClient from "../api/axiosClient";
+import './../assets/css/ticket.css'
 
-import React from "react";
+const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
 
-import ldaLogo from "../../public/logos/lda.png"
-
-const TicketQrView = React.forwardRef(({ ticket, type }, ref) => {
     return (
-
-        <div ref={ref}
-            style={{
-                width: "260px",
-                border: "2px dashed #444",
-                padding: "12px",
-                textAlign: "center",
-                fontFamily: "Arial, sans-serif",
-                backgroundColor: "#fff",
-            }}
-        >
+        <div ref={ref} id="ticket_wrap">
             {/* ================= HEADER ================= */}
+            <div id="ticket_header">
+                <img src={ldaLogo} alt="Logo" style={{ height: "28px" }} />
+
+                <div className="text-center">
+                    <div style={{ fontSize: "11px", fontWeight: "bold" }}>
+                        Rastriya Prerna Sthal
+                    </div>
+                    <div style={{ fontSize: "9px", color: "#666" }}>
+                        Lucknow Development Authority
+                    </div>
+                </div>
+
+                <img src={ldaLogo} alt="Logo" style={{ height: "28px" }} />
+            </div>
+
+            <hr style={{ border: "1px solid #ccc", margin: "8px 0" }} />
+
+            {/* ================= TICKET INFO ================= */}
+            <div id="top_detail">
+                <p>Ticket ID: {ticketData.id}</p>
+                <p>
+                    Visit Date:{" "}
+                    {new Date(ticketData.visitDate).toLocaleDateString("en-GB")}
+                </p>
+
+            </div>
+
+            {/* ================= QR ================= */}
+            <div className="text-center">
+                {ticketData.qrImage && (
+                    <img
+                        src={`data:image/png;base64,${ticketData.qrImage}`}
+                        alt="Ticket QR"
+                        width="170"
+                        height="170"
+                    />
+                )}
+            </div>
+
+            {/* ================= TYPE + PRICE ================= */}
+            <div id="ticket_info">
+                {ticketData.type} Ticket {ticketData.type == 'KID' && (<span>0-7 yr</span>)}
+            </div>
 
             <div
                 style={{
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    marginBottom: "8px",
+                    textAlign: "center",
+                    fontSize: "12px",
+                    marginBottom: "6px",
                 }}
             >
-                {/* LEFT LOGO */}
-                <img
-                    src={ldaLogo}
-                    alt="Prerna Sthal Logo"
-                    style={{ height: "30px" }}
-                />
-                <small style={{ margin: "2px 0", fontWeight: "bold" }}>
-                    Rastriya Prerna Sthal
-                </small>
-                {/* RIGHT LOGO */}
-                <img
-                    src={ldaLogo}
-                    alt="LDA Logo"
-                    style={{ height: "30px" }}
-                />
+                Price: ₹{ticketData.price}
             </div>
 
-            {/* ================= TITLE ================= */}
+            <hr style={{ border: "1px dashed #aaa", margin: "8px 0" }} />
 
-            <hr style={{ margin: "8px 0" }} />
-
-            {/* ================= WELCOME MESSAGE ================= */}
-            <p style={{ fontSize: "12px", marginBottom: "6px" }}>
-                <strong>Welcome</strong>
-            </p>
-
-            {/* ================= QR ================= */}
-            <img
-                src={`http://localhost:8082/api/ticket/get/${ticket}`}
-                alt="Ticket QR"
-                width="140"
-                height="140"
-                style={{ marginBottom: "6px" }}
-            />
-
-            {/* ================= TICKET TYPE ================= */}
-            <p
-                style={{
-                    fontSize: "12px",
-                    fontWeight: "bold",
-                    margin: "0",
-                    textTransform: "uppercase",
-                }}
-            >
-                {type} Ticket
-            </p>
-
-
-            <p style={{ fontSize: "11px", margin: "10", color: "#555" }}>
-                Lucknow Development Authority
-            </p>
+            {/* ================= FOOTER ================= */}
+            <div id="ticekt_inst">
+                Please keep this ticket safe.<br />
+                QR code must be scanned at entry.
+            </div>
         </div>
-
     );
 });
 
 export default TicketQrView;
-
-
-
-
-
-
