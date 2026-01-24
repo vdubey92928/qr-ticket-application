@@ -1,6 +1,9 @@
+import Navbar from "../components/layout/Navbar";
+
 const Home = () => {
     return (
         <>
+            <Navbar />
             {/* ================= HERO SECTION ================= */}
             <section
                 className="d-flex align-items-center text-center text-light"
@@ -28,7 +31,6 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* ================= HOW IT WORKS ================= */}
             <section className="py-5 bg-light">
                 <div className="container">
                     <h2 className="text-center mb-5 fw-bold">How It Works</h2>

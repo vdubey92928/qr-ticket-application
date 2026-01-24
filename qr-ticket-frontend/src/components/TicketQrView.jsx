@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ldaLogo from "../../public/logos/lda.png";
-import axiosClient from "../api/axiosClient";
+import ldaLogo from "../assets/logos/lda.png"
 import './../assets/css/ticket.css'
 
 const TicketQrView = React.forwardRef(({ ticketData }, ref) => {

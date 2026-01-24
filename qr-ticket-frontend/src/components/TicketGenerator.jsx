@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import axiosClient from "../api/axiosClient";
 import TicketQrView from "./TicketQrView";
 import './../assets/css/ticket.css'
+import Navbar from "./layout/Navbar";
 
 const GenerateTicket = () => {
 
@@ -114,7 +115,8 @@ const GenerateTicket = () => {
 
 
     return (
-        <div className="container py-5">
+        <div className="container-fluid py-5">
+            <Navbar />
 
 
             {/* ================= FORM ================= */}

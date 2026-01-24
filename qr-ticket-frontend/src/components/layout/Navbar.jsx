@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
             <div className="container">
                 <Link className="navbar-brand fw-bold" to="/">
                     <i className="fa fa-qrcode me-2"></i>QR Ticket
@@ -31,14 +31,18 @@ const Navbar = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/contact">Contact</Link>
                         </li>
-                        <li className="nav-item ms-2">
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/about">About</Link>
+                        </li>
+                        {/* <li className="nav-item ms-2">
                             <Link className="btn btn-outline-light btn-sm" to="/login">
                                 Admin
                             </Link>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>
+
         </nav>
     );
 };

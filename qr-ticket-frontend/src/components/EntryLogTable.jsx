@@ -22,6 +22,7 @@ function EntryLogTable() {
                 <thead>
                     <tr>
                         <th>Ticket ID</th>
+                        <th>Type</th>
                         <th>Scan Result</th>
                         <th>Scanned At</th>
                     </tr>
@@ -31,6 +32,7 @@ function EntryLogTable() {
                     {logs.map((log) => (
                         <tr key={log.id}>
                             <td>{log.ticket.id}</td>
+                            <td>{log.type}</td>
                             <td>{log.scanResult}</td>
                             <td>{log.scannedAt}</td>
                         </tr>

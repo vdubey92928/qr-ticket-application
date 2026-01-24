@@ -25,6 +25,7 @@ function TicketTable() {
                     <tr>
                         <th>Ticket ID</th>
                         <th>Visit Date</th>
+                        <th>Type</th>
                         <th>Used</th>
                         {/* <th>View QR</th> */}
                     </tr>
@@ -35,6 +36,7 @@ function TicketTable() {
                         <tr key={ticket.id}>
                             <td>{ticket.id}</td>
                             <td>{ticket.visitDate}</td>
+                            <td>{ticket.type}</td>
                             <td>{ticket.used ? "YES" : "NO"}</td>
                             {/* <td><TicketQrView tick={ticket.id} /> </td> */}
 

@@ -18,83 +18,52 @@ function GateScanner() {
 
     // ======================= REFS (NO RE-RENDER) =======================
 
-    // Holds the Html5Qrcode instance (camera controller)
-    const scannerRef = useRef(null);
-
-    // True when camera is actively scanning
-    const isCameraRunningRef = useRef(false);
-
-    // Prevents scanning the same QR multiple times
-    const scanLockedRef = useRef(false);
-
-    // Prevents start/stop being called at the same time
-    // 🔥 THIS FIXES "already under transition" ERROR
-    const isTransitioningRef = useRef(false);
+    const scannerRef = useRef(null);          // Html5Qrcode instance
+    const isCameraRunningRef = useRef(false); // camera active
+    const scanLockedRef = useRef(false);      // block duplicate scans
+    const isTransitioningRef = useRef(false); // prevent race conditions
 
     // ======================= STATE (CAUSES UI UPDATE) =======================
 
-    // Stores last scanned QR value
     const [detectedText, setDetectedText] = useState(null);
-
-    // Stores ticket validation status
     const [status, setStatus] = useState(null);
 
     // ======================= COMPONENT LIFECYCLE =======================
 
     useEffect(() => {
-        // Create scanner instance ONCE when component mounts
-        // It binds internally to the DOM element with id="qr-reader"
         scannerRef.current = new Html5Qrcode("qr-reader");
 
-        // Delay start so React finishes rendering the DOM
-        setTimeout(() => {
-            startScanner();
-        }, 0);
+        setTimeout(startScanner, 1000);
 
-        // Cleanup when component unmounts
-        return () => {
-            stopAndClearScanner();
-        };
+        return stopAndClearScanner;
     }, []);
 
     // ======================= START CAMERA =======================
 
     const startScanner = async () => {
-        const scanner = scannerRef.current;
-        const container = document.getElementById("qr-reader");
-
-        // HARD guards to avoid illegal state transitions
         if (
-            !scanner ||                    // scanner not created
-            !container ||                  // DOM not ready
-            isCameraRunningRef.current ||  // already running
-            isTransitioningRef.current     // stop/clear in progress
-        ) {
-            return;
-        }
+            !scannerRef.current ||
+            !document.getElementById("qr-reader") ||
+            isCameraRunningRef.current ||
+            isTransitioningRef.current
+        ) return;
 
         try {
-            // Lock transitions
             isTransitioningRef.current = true;
 
-            // Start camera + scanning
-            await scanner.start(
-                { facingMode: "environment" }, // use back camera
-                { fps: 10, qrbox: 250 },        // scan config
-                onScanSuccess,                  // success callback
-                () => { }                        // ignore scan errors
+            await scannerRef.current.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                onScanSuccess,
+                () => { }
             );
 
-            // Mark camera running
             isCameraRunningRef.current = true;
-
-            // Allow scanning
             scanLockedRef.current = false;
 
         } catch (err) {
             console.error("Camera start failed", err);
         } finally {
-            // Unlock transitions
             isTransitioningRef.current = false;
         }
     };
@@ -103,32 +72,19 @@ function GateScanner() {
 
     const stopAndClearScanner = async () => {
         const scanner = scannerRef.current;
-
-        // Do nothing if scanner missing or already transitioning
         if (!scanner || isTransitioningRef.current) return;
 
         try {
-            // Lock transitions
             isTransitioningRef.current = true;
 
-            // Stop camera ONLY if currently scanning
-            // html5-qrcode state "2" = SCANNING
-            if (scanner.getState && scanner.getState() === 2) {
-                await scanner.stop();
-            }
-
-            // Clear scanner and RELEASE MediaStream
-            // 🔥 THIS TURNS OFF CAMERA LED
+            if (scanner.getState?.() === 2) await scanner.stop();
             await scanner.clear();
 
-            // Update camera state
             isCameraRunningRef.current = false;
 
         } catch (err) {
-            // Ignore library race-condition errors
             console.warn("Stop/Clear ignored:", err);
         } finally {
-            // Unlock transitions
             isTransitioningRef.current = false;
         }
     };
@@ -136,33 +92,21 @@ function GateScanner() {
     // ======================= SCAN CALLBACK =======================
 
     const onScanSuccess = (decodedText) => {
-
-        // Block duplicate scans
         if (scanLockedRef.current) return;
         scanLockedRef.current = true;
 
-        // Update UI
         setDetectedText(decodedText);
         setStatus(null);
 
-        // IMPORTANT:
-        // html5-qrcode calls this INSIDE its scan loop.
-        // We must exit the loop before stopping camera.
         setTimeout(async () => {
-
-            // Turn OFF camera completely
             await stopAndClearScanner();
-
-            // Validate QR with backend
             await validateTicket(decodedText);
 
-            // Restart camera AFTER 3 seconds
             setTimeout(() => {
-                setDetectedText(null); // clear UI
-                setStatus(null);       // reset status
-                startScanner();        // restart camera
+                setDetectedText(null);
+                setStatus(null);
+                // startScanner();
             }, 3000);
-
         }, 0);
     };
 
@@ -170,16 +114,12 @@ function GateScanner() {
 
     const validateTicket = async (qrHash) => {
         try {
-            const response = await axiosClient.post(
+            const { data } = await axiosClient.post(
                 "/api/ticket/validate",
                 { qrHash }
             );
-
-            // Show backend status (VALID / INVALID)
-            setStatus(response.data.status);
-
+            setStatus(data.status);
         } catch {
-            // Network / server error
             setStatus("ERROR");
         }
     };
@@ -198,14 +138,13 @@ function GateScanner() {
             <div
                 id="qr-reader"
                 style={{
-                    width: "320px",
-                    height: "320px",
+                    width: 320,
+                    height: 320,
                     border: "2px solid black",
                     display: detectedText ? "none" : "block"
                 }}
             />
 
-            {/* Display scanned QR */}
             {detectedText && (
                 <div>
                     <p><strong>Detected QR:</strong></p>
@@ -213,7 +152,6 @@ function GateScanner() {
                 </div>
             )}
 
-            {/* Display validation result */}
             {status && (
                 <p style={{ fontWeight: "bold" }}>
                     Status: {status}
