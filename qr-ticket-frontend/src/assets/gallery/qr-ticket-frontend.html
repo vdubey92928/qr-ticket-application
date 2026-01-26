@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)http://localhost:5173/gallery -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+  <script type="module" src="./qr-ticket-frontend_files/client"></script>
+
+  
+  <link rel="icon" type="image/svg+xml" href="http://localhost:5173/vite.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>qr-ticket-frontend</title>
+  <link href="./qr-ticket-frontend_files/bootstrap.min.css" rel="stylesheet">
+  <link href="./qr-ticket-frontend_files/all.min.css" rel="stylesheet">
+<style type="text/css" data-vite-dev-id="/Users/adarshpal/qr-ticket-application/qr-ticket-frontend/src/assets/css/ticket.css">#ticket_inst {
+    font-size: 8px;
+    text-align: center;
+    color: #555;
+}
+
+#ticket_wrap {
+    width: 280px;
+    border: 2px dashed #333;
+    padding: 14px;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #222;
+}
+
+#ticket_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+#ticket_info {
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+#top_detail {
+    font-size: 10px;
+}</style></head>
+
+<body>
+  <div id="root"><style>
+        :root {
+          --nav-bg-glass: rgba(11, 18, 32, 0.75);
+          --nav-bg-solid: rgba(11, 18, 32, 0.95);
+          --text-main: #e2e8f0;
+          --accent-glow: #38bdf8; /* Cyan/Blue */
+          --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+          --border-color: rgba(255, 255, 255, 0.08);
+          --nav-height: 70px;
+        }
+
+        /* --- CONTAINER & GLASS EFFECT --- */
+        .nav-root {
+          position: sticky;
+          top: 0;
+          z-index: 9999;
+          transition: all 0.3s ease;
+          border-bottom: 1px solid transparent;
+        }
+
+        /* Blurry glass look when sticky */
+        .nav-root.scrolled {
+          background: var(--nav-bg-glass);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 1px solid var(--border-color);
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Initial transparent look (optional, or keep solid) */
+        .nav-root:not(.scrolled) {
+           background: rgba(11, 18, 32, 0.5); 
+           backdrop-filter: blur(8px);
+        }
+
+        .nav-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 1.5rem;
+          height: var(--nav-height);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        /* --- LOGO STYLING --- */
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+          group;
+        }
+
+        .brand-icon {
+          width: 38px;
+          height: 38px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255,255,255,0.05);
+          border-radius: 10px;
+          color: #38bdf8;
+          font-size: 1.2rem;
+          border: 1px solid rgba(255,255,255,0.1);
+          transition: 0.3s ease;
+        }
+
+        .brand:hover .brand-icon {
+          background: var(--accent-gradient);
+          color: #fff;
+          transform: rotate(-10deg);
+          box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .brand-text {
+          font-size: 1.3rem;
+          font-weight: 800;
+          letter-spacing: -0.5px;
+          background: linear-gradient(90deg, #fff, #94a3b8);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        /* --- DESKTOP NAVIGATION --- */
+        .nav-links {
+          display: flex;
+          gap: 2rem;
+          align-items: center;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .nav-link {
+          position: relative;
+          color: #cbd5e1;
+          text-decoration: none;
+          font-size: 0.95rem;
+          font-weight: 500;
+          transition: color 0.3s ease;
+          padding: 5px 0;
+        }
+
+        /* Active/Hover state */
+        .nav-link:hover, .nav-link.active {
+          color: #fff;
+          text-shadow: 0 0 8px rgba(255,255,255,0.3);
+        }
+
+        /* Animated Underline */
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 2px;
+          bottom: 0;
+          left: 0;
+          background: var(--accent-glow);
+          transition: width 0.3s ease-in-out;
+          box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .nav-link:hover::after {
+          width: 100%;
+        }
+
+        /* --- BUTTON STYLING (Admin) --- */
+        .nav-btn {
+          padding: 0.6rem 1.4rem;
+          border-radius: 50px;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: white;
+          background: var(--accent-gradient);
+          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+          transition: all 0.3s ease;
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+          filter: brightness(1.1);
+        }
+
+        /* --- MOBILE TOGGLE --- */
+        .toggler {
+          display: none;
+          background: none;
+          border: none;
+          color: #fff;
+          cursor: pointer;
+          padding: 0.5rem;
+          transition: 0.3s;
+        }
+        .toggler:hover { color: var(--accent-glow); }
+
+        /* --- MOBILE MENU PANEL --- */
+        .mobile-panel {
+          position: fixed;
+          top: var(--nav-height);
+          left: 0;
+          width: 100%;
+          background: var(--nav-bg-solid);
+          border-bottom: 1px solid var(--border-color);
+          overflow: hidden;
+          max-height: 0;
+          transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(20px);
+        }
+
+        .mobile-panel.open {
+          max-height: 400px; /* Adjust based on content */
+          box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .mobile-link {
+          display: block;
+          padding: 1rem 1.5rem;
+          color: #cbd5e1;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(255,255,255,0.03);
+          font-weight: 500;
+          transition: 0.2s;
+        }
+
+        .mobile-link:hover {
+          background: rgba(255,255,255,0.05);
+          color: var(--accent-glow);
+          padding-left: 2rem; /* Slide effect */
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+          .nav-links { display: none; }
+          .toggler { display: block; }
+        }
+      </style><nav class="nav-root scrolled"><div class="nav-container"><a class="brand" href="http://localhost:5173/" data-discover="true"><div class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><path d="M3 14h7v7H3z"></path></svg></div><span class="brand-text">QR Ticket</span></a><ul class="nav-links"><li><a class="nav-link" href="http://localhost:5173/" data-discover="true">Home</a></li><li><a class="nav-link" href="http://localhost:5173/generate" data-discover="true">Book Ticket</a></li><li><a class="nav-link" href="http://localhost:5173/gallery" data-discover="true">Gallery</a></li><li><a class="nav-link" href="http://localhost:5173/about" data-discover="true">About</a></li><li><a class="nav-link" href="http://localhost:5173/contact" data-discover="true">Contact</a></li><li><a class="nav-btn" href="http://localhost:5173/login" data-discover="true">Admin Panel</a></li></ul><button class="toggler" aria-label="Toggle Navigation"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div><div class="mobile-panel "><a class="mobile-link" href="http://localhost:5173/" data-discover="true">Home</a><a class="mobile-link" href="http://localhost:5173/generate" data-discover="true">Book Ticket</a><a class="mobile-link" href="http://localhost:5173/gallery" data-discover="true">Gallery</a><a class="mobile-link" href="http://localhost:5173/about" data-discover="true">About</a><a class="mobile-link" href="http://localhost:5173/contact" data-discover="true">Contact</a><a class="mobile-link" href="http://localhost:5173/login" data-discover="true" style="color: rgb(56, 189, 248); font-weight: bold;">Admin Login →</a></div></nav><style>
+        :root {
+          --bg-dark: #0f172a;
+          --glass-bg: rgba(30, 41, 59, 0.4);
+          --accent-blue: #3b82f6;
+          --accent-purple: #8b5cf6;
+          --text-main: #f8fafc;
+          --text-muted: #94a3b8;
+        }
+
+        .gallery-root {
+          min-height: 100vh;
+          background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 100%);
+          color: var(--text-main);
+          padding-bottom: 4rem;
+          font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem 1.5rem;
+        }
+
+        /* --- HEADER --- */
+        .gallery-header {
+          text-align: center;
+          margin-bottom: 3rem;
+          animation: fadeDown 0.8s ease-out;
+        }
+
+        .gallery-title {
+          font-size: 2.5rem;
+          font-weight: 800;
+          margin-bottom: 0.5rem;
+          background: linear-gradient(135deg, #fff 30%, #94a3b8 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-subtitle {
+          color: var(--text-muted);
+          font-size: 1.1rem;
+        }
+
+        /* --- FILTERS --- */
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 10px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- GRID --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+
+        /* Overlay Text */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+
+        .img-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .img-desc {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        /* --- LIGHTBOX (MODAL) --- */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .close-btn:hover { color: var(--accent-blue); transform: scale(1.1); }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            .gallery-title { font-size: 2rem; }
+            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); }
+        }
+      </style><div class="gallery-root"><div class="container"><header class="gallery-header"><h1 class="gallery-title">Prerana Sthal Gallery</h1><p class="gallery-subtitle">Experience the Green Corridor &amp; Monuments of Lucknow</p></header><div class="filter-tabs"><button class="filter-btn active">All</button><button class="filter-btn ">Parks</button><button class="filter-btn ">Statues</button><button class="filter-btn ">Architecture</button><button class="filter-btn ">Nature</button></div><div class="gallery-grid"><div class="gallery-item"><img alt="Main Memorial" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1605649487215-287f37526017"><div class="overlay"><h3 class="img-title">Main Memorial</h3><p class="img-desc">Stone Carving Detail</p></div></div><div class="gallery-item"><img alt="Bronze Figure" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1550186088-cc772227d896"><div class="overlay"><h3 class="img-title">Bronze Figure</h3><p class="img-desc">Historical Tribute</p></div></div><div class="gallery-item"><img alt="Stone Elephant" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1598887142472-8d77d7301072"><div class="overlay"><h3 class="img-title">Stone Elephant</h3><p class="img-desc">Grand Entrance Symbol</p></div></div><div class="gallery-item"><img alt="Ambedkar Tribute" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1620309995166-4177d61b5855"><div class="overlay"><h3 class="img-title">Ambedkar Tribute</h3><p class="img-desc">Central Statue</p></div></div><div class="gallery-item"><img alt="Detailed Arts" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1598555620950-59f237eb3e28"><div class="overlay"><h3 class="img-title">Detailed Arts</h3><p class="img-desc">Wall Murals</p></div></div><div class="gallery-item"><img alt="Guardian Lions" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1570375819777-62cc9683fb66"><div class="overlay"><h3 class="img-title">Guardian Lions</h3><p class="img-desc">Power Symbol</p></div></div><div class="gallery-item"><img alt="Heritage Arch" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1599661046289-e31897846e41"><div class="overlay"><h3 class="img-title">Heritage Arch</h3><p class="img-desc">Stone Gateway</p></div></div><div class="gallery-item"><img alt="Central Pathway" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1496347312489-424fa7527632"><div class="overlay"><h3 class="img-title">Central Pathway</h3><p class="img-desc">Morning Walk Track</p></div></div><div class="gallery-item"><img alt="Green Lawn" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1576403780789-f592473456fb"><div class="overlay"><h3 class="img-title">Green Lawn</h3><p class="img-desc">Picnic Area</p></div></div><div class="gallery-item"><img alt="Palm Trees" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1512428559087-560fa5ce7d02"><div class="overlay"><h3 class="img-title">Palm Trees</h3><p class="img-desc">Tropical Vibe</p></div></div><div class="gallery-item"><img alt="Fountains" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1515263487990-61b07816b324"><div class="overlay"><h3 class="img-title">Fountains</h3><p class="img-desc">Water Feature</p></div></div><div class="gallery-item"><img alt="Bench Seating" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1563823251-57d4cb954a24"><div class="overlay"><h3 class="img-title">Bench Seating</h3><p class="img-desc">Relaxation Spot</p></div></div><div class="gallery-item"><img alt="Sunset View" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1507525428034-b723cf961d3e"><div class="overlay"><h3 class="img-title">Sunset View</h3><p class="img-desc">Evening Atmosphere</p></div></div><div class="gallery-item"><img alt="Main Dome" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1548625361-b889814a5dc4"><div class="overlay"><h3 class="img-title">Main Dome</h3><p class="img-desc">Structural Marvel</p></div></div><div class="gallery-item"><img alt="Sandstone Pillars" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1588647007788-b21a50a1127b"><div class="overlay"><h3 class="img-title">Sandstone Pillars</h3><p class="img-desc">Classic Design</p></div></div><div class="gallery-item"><img alt="Grand Steps" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1600607686527-6fb886090705"><div class="overlay"><h3 class="img-title">Grand Steps</h3><p class="img-desc">Entry Staircase</p></div></div><div class="gallery-item"><img alt="Museum Exterior" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1555529733-0e670560f7e1"><div class="overlay"><h3 class="img-title">Museum Exterior</h3><p class="img-desc">Modern Heritage</p></div></div><div class="gallery-item"><img alt="Corridor View" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1470723710355-95304d8aece4"><div class="overlay"><h3 class="img-title">Corridor View</h3><p class="img-desc">Endless Pillars</p></div></div><div class="gallery-item"><img alt="Blooming Flowers" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1490750967868-58cb75069ed6"><div class="overlay"><h3 class="img-title">Blooming Flowers</h3><p class="img-desc">Spring Collection</p></div></div><div class="gallery-item"><img alt="River Front" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1437482078695-73f5ca6c96e2"><div class="overlay"><h3 class="img-title">River Front</h3><p class="img-desc">Calm Waters</p></div></div><div class="gallery-item"><img alt="Dense Trees" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1448375240586-dfd8d395ea6c"><div class="overlay"><h3 class="img-title">Dense Trees</h3><p class="img-desc">Forest Cover</p></div></div><div class="gallery-item"><img alt="Blue Sky" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1500382017468-9049fed747ef"><div class="overlay"><h3 class="img-title">Blue Sky</h3><p class="img-desc">Clear Weather</p></div></div><div class="gallery-item"><img alt="Memorial Wall" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1616091093747-47922501b8c8"><div class="overlay"><h3 class="img-title">Memorial Wall</h3><p class="img-desc">Engraved History</p></div></div><div class="gallery-item"><img alt="Open Air Gym" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1517836357463-d25dfeac3438"><div class="overlay"><h3 class="img-title">Open Air Gym</h3><p class="img-desc">Fitness Zone</p></div></div><div class="gallery-item"><img alt="Night Lights" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1519757656976-18451b6664d5"><div class="overlay"><h3 class="img-title">Night Lights</h3><p class="img-desc">Illuminated Park</p></div></div><div class="gallery-item"><img alt="Autumn Leaves" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1508781378177-e07593c72b15"><div class="overlay"><h3 class="img-title">Autumn Leaves</h3><p class="img-desc">Seasonal Change</p></div></div><div class="gallery-item"><img alt="Kids Slide" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1551280857-2b9be51c84dd"><div class="overlay"><h3 class="img-title">Kids Slide</h3><p class="img-desc">Playground</p></div></div><div class="gallery-item"><img alt="Side Profile" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1572025442641-535c2b36f88e"><div class="overlay"><h3 class="img-title">Side Profile</h3><p class="img-desc">Detailed Carving</p></div></div><div class="gallery-item"><img alt="Stone Texture" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1516934024742-b461fba47600"><div class="overlay"><h3 class="img-title">Stone Texture</h3><p class="img-desc">Close Up</p></div></div><div class="gallery-item"><img alt="Green Ferns" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1525498128493-380d1990a112"><div class="overlay"><h3 class="img-title">Green Ferns</h3><p class="img-desc">Lush Detail</p></div></div><div class="gallery-item"><img alt="Wide Angle" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1459259163570-8b630dc654f3"><div class="overlay"><h3 class="img-title">Wide Angle</h3><p class="img-desc">Park Panorama</p></div></div><div class="gallery-item"><img alt="Abstract Art" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1559670087-01053b26c369"><div class="overlay"><h3 class="img-title">Abstract Art</h3><p class="img-desc">Modern Sculpture</p></div></div><div class="gallery-item"><img alt="Old Pillar" class="gallery-img" loading="lazy" src="./qr-ticket-frontend_files/photo-1589531818296-1bc8b4d89644"><div class="overlay"><h3 class="img-title">Old Pillar</h3><p class="img-desc">Heritage Spot</p></div></div></div></div></div>;<footer class="bg-dark text-light mt-5 pt-4 pb-3"><div class="container"><div class="row"><div class="col-md-4 mb-3"><h5>QR Ticket Generator</h5><p class="small">Secure QR-based ticketing system for events, parking, and access control.</p></div><div class="col-md-4 mb-3"><h6>Quick Links</h6><ul class="list-unstyled small"><li>Home</li><li>Generate Ticket</li><li>Gallery</li><li>Contact</li></ul></div><div class="col-md-4 mb-3"><h6>Connect</h6><i class="fab fa-github me-3"></i><i class="fab fa-linkedin me-3"></i><i class="fab fa-twitter"></i></div></div><hr class="border-secondary"><div class="text-center small">© 2026 QR Ticket Generator | All Rights Reserved</div></div></footer></div>
+  <script type="module" src="./qr-ticket-frontend_files/main.jsx"></script>
+
+  <script src="./qr-ticket-frontend_files/bootstrap.bundle.min.js"></script>
+
+
+
+<vite-error-overlay><template shadowrootmode="open"><div class="backdrop" part="backdrop"><div class="window" part="window"><pre class="message" part="message"><span class="plugin" part="plugin">[plugin:vite:import-analysis] </span><span class="message-body" part="message-body">Failed to resolve import "./layout/Navbar" from "src/pages/Gallery.jsx". Does the file exist?</span></pre><pre class="file" part="file"><a class="file-link">/Users/adarshpal/qr-ticket-application/qr-ticket-frontend/src/pages/Gallery.jsx:2:19</a></pre><pre class="frame" part="frame">2  |  var _s = $RefreshSig$();
+3  |  import React, { useState } from "react";
+4  |  import Navbar from "./layout/Navbar";
+   |                      ^
+5  |  const GALLERY_DATA = [
+6  |    // --- STATUES &amp; MONUMENTS ---</pre><pre class="stack" part="stack">    at TransformPluginContext._formatLog (<a class="file-link">file:///Users/adarshpal/qr-ticket-application/qr-ticket-frontend/node_modules/vite/dist/node/chunks/config.js:28999:43</a>)
+    at TransformPluginContext.error (<a class="file-link">file:///Users/adarshpal/qr-ticket-application/qr-ticket-frontend/node_modules/vite/dist/node/chunks/config.js:28996:14</a>)
+    at normalizeUrl (<a class="file-link">file:///Users/adarshpal/qr-ticket-application/qr-ticket-frontend/node_modules/vite/dist/node/chunks/config.js:27119:18</a>)
+    at process.processTicksAndRejections (node:internal<a class="file-link">/process/task_queues:105:5</a>)
+    at async <a class="file-link">file:///Users/adarshpal/qr-ticket-application/qr-ticket-frontend/node_modules/vite/dist/node/chunks/config.js:27177:32</a>
+    at async Promise.all (index 2)
+    at async TransformPluginContext.transform (<a class="file-link">file:///Users/adarshpal/qr-ticket-application/qr-ticket-frontend/node_modules/vite/dist/node/chunks/config.js:27145:4</a>)
+    at async EnvironmentPluginContainer.transform (<a class="file-link">file:///Users/adarshpal/qr-ticket-application/qr-ticket-frontend/node_modules/vite/dist/node/chunks/config.js:28797:14</a>)
+    at async loadAndTransform (<a class="file-link">file:///Users/adarshpal/qr-ticket-application/qr-ticket-frontend/node_modules/vite/dist/node/chunks/config.js:22670:26</a>)</pre><div class="tip" part="tip">Click outside, press <kbd>Esc</kbd> key, or fix the code to dismiss.<br>You can also disable this overlay by setting <code part="config-option-name">server.hmr.overlay</code> to <code part="config-option-value">false</code> in <code part="config-file-name">vite.config.js</code>.</div></div><style>
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  --monospace: 'SFMono-Regular', Consolas,
+  'Liberation Mono', Menlo, Courier, monospace;
+  --red: #ff5555;
+  --yellow: #e2aa53;
+  --purple: #cfa4ff;
+  --cyan: #2dd9da;
+  --dim: #c9c9c9;
+
+  --window-background: #181818;
+  --window-color: #d8d8d8;
+}
+
+.backdrop {
+  position: fixed;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.66);
+}
+
+.window {
+  font-family: var(--monospace);
+  line-height: 1.5;
+  max-width: 80vw;
+  color: var(--window-color);
+  box-sizing: border-box;
+  margin: 30px auto;
+  padding: 2.5vh 4vw;
+  position: relative;
+  background: var(--window-background);
+  border-radius: 6px 6px 8px 8px;
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+  overflow: hidden;
+  border-top: 8px solid var(--red);
+  direction: ltr;
+  text-align: left;
+}
+
+pre {
+  font-family: var(--monospace);
+  font-size: 16px;
+  margin-top: 0;
+  margin-bottom: 1em;
+  overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+pre::-webkit-scrollbar {
+  display: none;
+}
+
+pre.frame::-webkit-scrollbar {
+  display: block;
+  height: 5px;
+}
+
+pre.frame::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 5px;
+}
+
+pre.frame {
+  scrollbar-width: thin;
+}
+
+.message {
+  line-height: 1.3;
+  font-weight: 600;
+  white-space: pre-wrap;
+}
+
+.message-body {
+  color: var(--red);
+}
+
+.plugin {
+  color: var(--purple);
+}
+
+.file {
+  color: var(--cyan);
+  margin-bottom: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.frame {
+  color: var(--yellow);
+}
+
+.stack {
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.tip {
+  font-size: 13px;
+  color: #999;
+  border-top: 1px dotted #999;
+  padding-top: 13px;
+  line-height: 1.8;
+}
+
+code {
+  font-size: 13px;
+  font-family: var(--monospace);
+  color: var(--yellow);
+}
+
+.file-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+kbd {
+  line-height: 1.5;
+  font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: rgb(38, 40, 44);
+  color: rgb(166, 167, 171);
+  padding: 0.15rem 0.3rem;
+  border-radius: 0.25rem;
+  border-width: 0.0625rem 0.0625rem 0.1875rem;
+  border-style: solid;
+  border-color: rgb(54, 57, 64);
+  border-image: initial;
+}
+</style></div></template></vite-error-overlay></body></html>
