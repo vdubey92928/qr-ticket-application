@@ -88,6 +88,8 @@ const GenerateTicket = () => {
             // API CALL
             const response = await axiosClient.post("/api/ticket/generate", payload);
 
+            console.log(response.data[0].qrImage);
+
             // 2. Data Extraction Logic (Safe Parsing)
             let apiData = [];
             if (Array.isArray(response.data)) {
