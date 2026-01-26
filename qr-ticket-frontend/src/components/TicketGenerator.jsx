@@ -136,7 +136,6 @@ const GenerateTicket = () => {
                                         <input
                                             type="number"
                                             name="adults"
-                                            min="0"
                                             className="form-control"
                                             value={formData.adults}
                                             onChange={handleChange}
@@ -151,7 +150,6 @@ const GenerateTicket = () => {
                                         <input
                                             type="number"
                                             name="kids"
-                                            min="0"
                                             className="form-control"
                                             value={formData.kids}
                                             onChange={handleChange}
