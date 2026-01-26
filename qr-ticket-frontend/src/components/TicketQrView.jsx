@@ -1,7 +1,7 @@
 import React from "react";
 import ldaLogo from "../assets/logos/lda.png";
 
-const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
+const TicketQrView = React.forwardRef(({ ticketData, count }, ref) => {
     return (
         <>
             <style>{`
@@ -156,8 +156,9 @@ const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
                     
                     {/* Meta Data Row */}
                     <div className="info-row">
-                        <span>ID: <strong>#{ticketData.id}</strong></span>
+                        <span>TICKET NO: <strong>{count}</strong></span>
                         <span>DATE: <strong>{new Date(ticketData.visitDate).toLocaleDateString("en-GB")}</strong></span>
+                        {/* new Date(ticketData.visitDate).toLocaleDateString("en-GB") */}
                     </div>
 
                     {/* QR Code */}
@@ -187,6 +188,20 @@ const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
                     <div className="price-tag">
                         ₹{ticketData.price}/-
                     </div>
+
+                    {/* Meta Data Row */}
+                    <div className="info-row">                      
+<span>
+    Booking Date: <strong>
+        {new Date(ticketData.visitDate).toLocaleDateString("en-GB")} 
+        {" | "} 
+        {new Date(ticketData.visitDate).toLocaleTimeString("en-GB", {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        })}
+    </strong>
+</span>                    </div>
                 </div>
 
                 {/* --- FOOTER --- */}

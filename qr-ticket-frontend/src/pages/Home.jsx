@@ -211,8 +211,6 @@ const Home = () => {
       `}</style>
 
       <div className="home-root">
-        <Navbar />
-
         <main>
           {/* HERO */}
           <section className="hero-wrap" aria-label="Hero">
