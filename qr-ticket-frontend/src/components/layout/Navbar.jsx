@@ -6,7 +6,11 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Handle scroll effect for sharper transparency
+  // Helper function to check if the link is active
+  const isActive = (path) => {
+    return location.pathname === path ? "active" : "";
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -19,16 +23,17 @@ const Navbar = () => {
     <>
       <style>{`
         :root {
-          --nav-bg-glass: rgba(11, 18, 32, 0.75);
-          --nav-bg-solid: rgba(11, 18, 32, 0.95);
-          --text-main: #e2e8f0;
-          --accent-glow: #38bdf8; /* Cyan/Blue */
+          /* Updated to a deeper, richer dark background */
+          --nav-bg-glass: rgba(2, 6, 23, 0.85); /* Very Dark Slate */
+          --nav-bg-solid: #020617; 
+          --text-main: #94a3b8;
+          --text-active: #38bdf8; /* Cyan for Active State */
+          --accent-glow: #38bdf8;
           --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
           --border-color: rgba(255, 255, 255, 0.08);
           --nav-height: 70px;
         }
 
-        /* --- CONTAINER & GLASS EFFECT --- */
         .nav-root {
           position: sticky;
           top: 0;
@@ -37,19 +42,17 @@ const Navbar = () => {
           border-bottom: 1px solid transparent;
         }
 
-        /* Blurry glass look when sticky */
         .nav-root.scrolled {
           background: var(--nav-bg-glass);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
           border-bottom: 1px solid var(--border-color);
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
         
-        /* Initial transparent look (optional, or keep solid) */
         .nav-root:not(.scrolled) {
-           background: rgba(11, 18, 32, 0.5); 
-           backdrop-filter: blur(8px);
+           background: rgba(2, 6, 23, 0.6); 
+           backdrop-filter: blur(5px);
         }
 
         .nav-container {
@@ -62,13 +65,12 @@ const Navbar = () => {
           justify-content: space-between;
         }
 
-        /* --- LOGO STYLING --- */
+        /* --- LOGO --- */
         .brand {
           display: flex;
           align-items: center;
           gap: 10px;
           text-decoration: none;
-          group;
         }
 
         .brand-icon {
@@ -77,9 +79,9 @@ const Navbar = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.03);
           border-radius: 10px;
-          color: #38bdf8;
+          color: var(--accent-glow);
           font-size: 1.2rem;
           border: 1px solid rgba(255,255,255,0.1);
           transition: 0.3s ease;
@@ -89,19 +91,16 @@ const Navbar = () => {
           background: var(--accent-gradient);
           color: #fff;
           transform: rotate(-10deg);
-          box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
 
         .brand-text {
           font-size: 1.3rem;
           font-weight: 800;
           letter-spacing: -0.5px;
-          background: linear-gradient(90deg, #fff, #94a3b8);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          color: #f8fafc;
         }
 
-        /* --- DESKTOP NAVIGATION --- */
+        /* --- DESKTOP NAV --- */
         .nav-links {
           display: flex;
           gap: 2rem;
@@ -113,38 +112,47 @@ const Navbar = () => {
 
         .nav-link {
           position: relative;
-          color: #cbd5e1;
+          color: var(--text-main);
           text-decoration: none;
           font-size: 0.95rem;
           font-weight: 500;
-          transition: color 0.3s ease;
+          transition: all 0.3s ease;
           padding: 5px 0;
         }
 
-        /* Active/Hover state */
-        .nav-link:hover, .nav-link.active {
-          color: #fff;
-          text-shadow: 0 0 8px rgba(255,255,255,0.3);
+        /* Hover Effect */
+        .nav-link:hover {
+          color: #f1f5f9;
         }
 
-        /* Animated Underline */
+        /* ACTIVE STATE STYLING (The Key Change) */
+        .nav-link.active {
+          color: var(--text-active); /* Cyan Color */
+          font-weight: 600;
+          text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); /* Glow effect */
+        }
+
+        /* Underline Animation */
         .nav-link::after {
           content: '';
           position: absolute;
           width: 0;
           height: 2px;
-          bottom: 0;
+          bottom: -4px;
           left: 0;
           background: var(--accent-glow);
           transition: width 0.3s ease-in-out;
           box-shadow: 0 0 8px var(--accent-glow);
+          border-radius: 2px;
         }
 
-        .nav-link:hover::after {
+        /* Show underline on Hover OR if Active */
+        .nav-link:hover::after,
+        .nav-link.active::after {
           width: 100%;
         }
 
-        /* --- BUTTON STYLING (Admin) --- */
+        /* --- BUTTON --- */
         .nav-btn {
           padding: 0.6rem 1.4rem;
           border-radius: 50px;
@@ -160,11 +168,10 @@ const Navbar = () => {
 
         .nav-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-          filter: brightness(1.1);
+          box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
         }
 
-        /* --- MOBILE TOGGLE --- */
+        /* --- MOBILE --- */
         .toggler {
           display: none;
           background: none;
@@ -172,11 +179,8 @@ const Navbar = () => {
           color: #fff;
           cursor: pointer;
           padding: 0.5rem;
-          transition: 0.3s;
         }
-        .toggler:hover { color: var(--accent-glow); }
 
-        /* --- MOBILE MENU PANEL --- */
         .mobile-panel {
           position: fixed;
           top: var(--nav-height);
@@ -187,31 +191,28 @@ const Navbar = () => {
           overflow: hidden;
           max-height: 0;
           transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          backdrop-filter: blur(20px);
         }
 
-        .mobile-panel.open {
-          max-height: 400px; /* Adjust based on content */
-          box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
+        .mobile-panel.open { max-height: 400px; }
 
         .mobile-link {
           display: block;
           padding: 1rem 1.5rem;
-          color: #cbd5e1;
+          color: var(--text-main);
           text-decoration: none;
           border-bottom: 1px solid rgba(255,255,255,0.03);
           font-weight: 500;
           transition: 0.2s;
         }
 
-        .mobile-link:hover {
-          background: rgba(255,255,255,0.05);
-          color: var(--accent-glow);
-          padding-left: 2rem; /* Slide effect */
+        /* Mobile Active State */
+        .mobile-link.active {
+          color: var(--text-active);
+          background: rgba(56, 189, 248, 0.05);
+          border-left: 3px solid var(--text-active);
+          padding-left: calc(1.5rem - 3px);
         }
 
-        /* --- RESPONSIVE --- */
         @media (max-width: 900px) {
           .nav-links { display: none; }
           .toggler { display: block; }
@@ -220,10 +221,8 @@ const Navbar = () => {
 
       <nav className={`nav-root ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-container">
-          {/* Logo Area */}
           <Link to="/" className="brand" onClick={() => setOpen(false)}>
             <div className="brand-icon">
-              {/* Using CSS shape/SVG for icon to avoid FontAwesome dependency issues */}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
@@ -234,26 +233,29 @@ const Navbar = () => {
             <span className="brand-text">QR Ticket</span>
           </Link>
 
-          {/* Desktop Links */}
+          {/* Desktop Links with Active Logic */}
           <ul className="nav-links">
-            <li><Link to="/" className="nav-link">Home</Link></li>
-            <li><Link to="/generate" className="nav-link">Book Ticket</Link></li>
-            <li><Link to="/gallery" className="nav-link">Gallery</Link></li>
-            <li><Link to="/about" className="nav-link">About</Link></li>
-            <li><Link to="/contact" className="nav-link">Contact</Link></li>
             <li>
-              <Link to="/login" className="nav-btn">
-                Admin Panel
-              </Link>
+              <Link to="/" className={`nav-link ${isActive("/")}`}>Home</Link>
+            </li>
+            <li>
+              <Link to="/generate" className={`nav-link ${isActive("/generate")}`}>Book Ticket</Link>
+            </li>
+            <li>
+              <Link to="/gallery" className={`nav-link ${isActive("/gallery")}`}>Gallery</Link>
+            </li>
+            <li>
+              <Link to="/about" className={`nav-link ${isActive("/about")}`}>About</Link>
+            </li>
+            <li>
+              <Link to="/contact" className={`nav-link ${isActive("/contact")}`}>Contact</Link>
+            </li>
+            <li>
+              <Link to="/login" className="nav-btn">Admin Dashboard</Link>
             </li>
           </ul>
 
-          {/* Mobile Toggler */}
-          <button 
-            className="toggler" 
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle Navigation"
-          >
+          <button className="toggler" onClick={() => setOpen(!open)}>
             {open ? (
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round"/>
@@ -266,13 +268,13 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Dropdown */}
+        {/* Mobile Dropdown with Active Logic */}
         <div className={`mobile-panel ${open ? "open" : ""}`}>
-          <Link to="/" className="mobile-link" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/generate" className="mobile-link" onClick={() => setOpen(false)}>Book Ticket</Link>
-          <Link to="/gallery" className="mobile-link" onClick={() => setOpen(false)}>Gallery</Link>
-          <Link to="/about" className="mobile-link" onClick={() => setOpen(false)}>About</Link>
-          <Link to="/contact" className="mobile-link" onClick={() => setOpen(false)}>Contact</Link>
+          <Link to="/" className={`mobile-link ${isActive("/")}`} onClick={() => setOpen(false)}>Home</Link>
+          <Link to="/generate" className={`mobile-link ${isActive("/generate")}`} onClick={() => setOpen(false)}>Book Ticket</Link>
+          <Link to="/gallery" className={`mobile-link ${isActive("/gallery")}`} onClick={() => setOpen(false)}>Gallery</Link>
+          <Link to="/about" className={`mobile-link ${isActive("/about")}`} onClick={() => setOpen(false)}>About</Link>
+          <Link to="/contact" className={`mobile-link ${isActive("/contact")}`} onClick={() => setOpen(false)}>Contact</Link>
           <Link to="/login" className="mobile-link" style={{color: '#38bdf8', fontWeight: 'bold'}} onClick={() => setOpen(false)}>
             Admin Login →
           </Link>
