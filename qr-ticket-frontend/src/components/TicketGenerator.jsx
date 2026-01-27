@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import axiosClient from "../api/axiosClient";
 import TicketQrView from "./TicketQrView";
 import Navbar from "./layout/Navbar";
+import img from "../assets/gallery/p1.avif"
 
 const GenerateTicket = () => {
     const ticketRefs = useRef({});
@@ -80,6 +81,7 @@ const GenerateTicket = () => {
         };
 
         try {
+
             const payload = {
                 adult: Number(formData.adults),
                 kid: Number(formData.kids),
@@ -106,11 +108,13 @@ const GenerateTicket = () => {
                 for (let i = 0; i < payload.adult; i++) {
                     if (apiData[index]) {
                         generatedTickets.adult.push({ ...apiData[index++], type: 'ADULT' });
+
                     }
                 }
                 for (let i = 0; i < payload.kid; i++) {
                     if (apiData[index]) {
                         generatedTickets.kid.push({ ...apiData[index++], type: 'KID' });
+
                     }
                 }
                 setTickets(generatedTickets);
@@ -120,43 +124,9 @@ const GenerateTicket = () => {
 
         } catch (error) {
             console.warn("API Issue, using Demo Data.", error);
+            window.alert("Ticket Generation failed");
 
-            // ==================================================
-            // FALLBACK LOGIC: DEMO DATA WITH QR
-            // ==================================================
-
-            const demoAdults = [];
-            const demoKids = [];
-            const timestamp = Date.now();
-
-            for (let i = 0; i < formData.adults; i++) {
-                const id = `DEMO-A-${timestamp}-${i}`;
-                demoAdults.push({
-                    id: id,
-                    visitDate: new Date().toISOString(),
-                    price: 50,
-                    type: 'ADULT',
-                    // Use Google Chart API for Demo QR
-                    qrImage: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${id}`
-                });
-            }
-
-            for (let i = 0; i < formData.kids; i++) {
-                const id = `DEMO-K-${timestamp}-${i}`;
-                demoKids.push({
-                    id: id,
-                    visitDate: new Date().toISOString(),
-                    price: 20,
-                    type: 'KID',
-                    // Use Google Chart API for Demo QR
-                    qrImage: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${id}`
-                });
-            }
-
-            setTickets({
-                adult: demoAdults,
-                kid: demoKids
-            });
+            setTickets(null);
 
         } finally {
             setLoading(false);
@@ -211,8 +181,9 @@ const GenerateTicket = () => {
                                 <h3 className="section-title">Adult Tickets</h3>
                                 <div className="ticket-grid">
                                     {tickets.adult.map((ticket, i) => (
+
                                         <div key={i}>
-                                            <TicketQrView ref={(el) => (ticketRefs.current[ticket.id] = el)} ticketData={ticket} />
+                                            <TicketQrView ref={(el) => (ticketRefs.current[ticket.id] = el)} ticketData={ticket} count={i + 1} />
                                             <button className="print-btn" onClick={() => printTicket(ticket.id)}>Print</button>
                                         </div>
                                     ))}
@@ -227,7 +198,7 @@ const GenerateTicket = () => {
                                 <div className="ticket-grid">
                                     {tickets.kid.map((ticket, i) => (
                                         <div key={i}>
-                                            <TicketQrView ref={(el) => (ticketRefs.current[ticket.id] = el)} ticketData={ticket} />
+                                            <TicketQrView ref={(el) => (ticketRefs.current[ticket.id] = el)} ticketData={ticket} count={i + 1} />
                                             <button className="print-btn" onClick={() => printTicket(ticket.id)}>Print</button>
                                         </div>
                                     ))}

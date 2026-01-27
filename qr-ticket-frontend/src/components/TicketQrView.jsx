@@ -1,7 +1,7 @@
 import React from "react";
 import ldaLogo from "../assets/logos/lda.png";
 
-const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
+const TicketQrView = React.forwardRef(({ ticketData, count }, ref) => {
     return (
         <>
             <style>{`
@@ -134,17 +134,17 @@ const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
             `}</style>
 
             <div ref={ref} className="ticket-card">
-                
+
                 {/* --- HEADER --- */}
                 <div className="ticket-header">
                     <img src={ldaLogo} alt="LDA" className="logo-img" />
-                    
+
                     <div className="header-text">
                         <div className="venue-name">Rashtriya Prerna Sthal</div>
                         <div className="auth-name">LUCKNOW DEVELOPMENT AUTHORITY</div>
                     </div>
-                    
-                    <img src={ldaLogo} alt="LDA" className="logo-img" style={{opacity: 0.7}} />
+
+                    <img src={ldaLogo} alt="LDA" className="logo-img" style={{ opacity: 0.7 }} />
 
                     {/* Cutout Circles for tear effect */}
                     <div className="cutout cutout-left"></div>
@@ -153,11 +153,11 @@ const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
 
                 {/* --- BODY --- */}
                 <div className="ticket-body">
-                    
+
                     {/* Meta Data Row */}
                     <div className="info-row">
-                        <span>ID: <strong>#{ticketData.id}</strong></span>
-                        <span>DATE: <strong>{new Date(ticketData.visitDate).toLocaleDateString("en-GB")}</strong></span>
+                        <span>Ticket No. : <strong>{count}</strong></span>
+                        <span>DATE: <strong>{ticketData.visitDate}</strong></span>
                     </div>
 
                     {/* QR Code */}
@@ -171,8 +171,8 @@ const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
                                 style={{ display: 'block' }}
                             />
                         ) : (
-                            <div style={{width:160, height:160, background:'#f0f0f0', display:'flex', alignItems:'center', justifyContent:'center'}}>
-                                <span style={{fontSize:'10px'}}>Loading QR...</span>
+                            <div style={{ width: 160, height: 160, background: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span style={{ fontSize: '10px' }}>Loading QR...</span>
                             </div>
                         )}
                     </div>
@@ -181,7 +181,7 @@ const TicketQrView = React.forwardRef(({ ticketData }, ref) => {
                     <div className="ticket-type">
                         {ticketData.type} TICKET
                         {ticketData.type === 'KID' && <span className="age-badge">CHILD (5-12)</span>}
-                        {ticketData.type === 'ADULT' && <span className="age-badge" style={{background:'#64748b'}}>ADULT (12+)</span>}
+                        {ticketData.type === 'ADULT' && <span className="age-badge" style={{ background: '#64748b' }}>ADULT (12+)</span>}
                     </div>
 
                     <div className="price-tag">
