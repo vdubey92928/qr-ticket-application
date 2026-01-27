@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "../components/layout/Navbar";
-
 // Sourced relevant images for Green Corridor / Prerana Sthal Lucknow
 const GALLERY_DATA = [
   // --- STATUES & MONUMENTS ---
@@ -53,7 +51,6 @@ const Gallery = () => {
 
   return (
     <>
-      <Navbar />
       
       <style>{`
         :root {

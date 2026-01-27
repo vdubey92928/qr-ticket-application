@@ -1,37 +1,33 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { login } from "../services/authService";
 import { saveAuth } from "../util/authStorage";
-import { useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 
-function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
+const LoginPage = () => {
   const navigate = useNavigate();
+  const [creds, setCreds] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // --- SHORT HANDLER ---
+  const handleChange = (e) => setCreds({ ...creds, [e.target.name]: e.target.value });
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
+    setLoading(true); setError(null);
 
     try {
-      const data = await login(username, password);
+      const data = await login(creds.username, creds.password);
       saveAuth(data.token, data.role);
-
-      // Redirect based on role
-      if (data.role === "ADMIN") {
-        navigate("/admin");
-      } else if (data.role === "GATE") {
-        navigate("/gate");
-      } else {
-        setError("Unknown role");
-      }
+      
+      // Redirect Logic
+      if (data.role === "ADMIN") navigate("/admin");
+      else if (data.role === "GATE") navigate("/gate");
+      else setError("Unknown Role Assigned");
+      
     } catch (err) {
-      setError(err?.message || "Invalid username or password");
+      setError(err?.message || "Invalid Username or Password");
     } finally {
       setLoading(false);
     }
@@ -39,231 +35,84 @@ function LoginPage() {
 
   return (
     <>
+     
       <style>{`
-        :root{
-          --card-bg: #ffffff;
-          --page-bg: #f4f6fb;
-          --primary: #0d6efd;
-          --muted: #6b7280;
-          --danger: #dc3545;
-          --radius: 12px;
-          --max-width: 420px;
-          --transition: 180ms ease;
+        :root {
+          --bg-dark: #0f172a;
+          --glass-bg: rgba(30, 41, 59, 0.7);
+          --accent-grad: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
         }
-
-        .login-page {
+        .login-root {
           min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(180deg, #f7f9ff 0%, var(--page-bg) 100%);
-          padding: 2rem 1rem;
-          font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+          background: radial-gradient(circle at top center, #1e293b 0%, #020617 100%);
+          display: flex; align-items: center; justify-content: center;
+          padding-top: 60px; position: relative; overflow: hidden;
         }
-
-        .login-card{
-          width: 100%;
-          max-width: var(--max-width);
-          background: var(--card-bg);
-          border-radius: var(--radius);
-          box-shadow: 0 10px 30px rgba(15,23,42,0.08);
-          padding: 1.5rem;
-          box-sizing: border-box;
+        .glow {
+          position: absolute; width: 400px; height: 400px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);
+          z-index: 0; pointer-events: none;
         }
-
-        .login-header {
-          text-align: center;
-          margin-bottom: 0.75rem;
+        .login-card {
+          width: 100%; max-width: 400px; z-index: 10;
+          background: var(--glass-bg); backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
+          padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+          animation: fadeUp 0.8s ease-out;
         }
-
-        .login-header h2 {
-          margin: 0;
-          font-size: 1.25rem;
-          letter-spacing: -0.2px;
+        .inp {
+          width: 100%; padding: 12px; margin-bottom: 1rem;
+          background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 10px; color: #fff; outline: none; transition: 0.3s;
         }
-
-        .login-sub {
-          margin-top: 0.35rem;
-          color: var(--muted);
-          font-size: 0.95rem;
+        .inp:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+        .btn-login {
+          width: 100%; padding: 12px; border: none; border-radius: 10px;
+          background: var(--accent-grad); color: white; font-weight: bold;
+          cursor: pointer; transition: 0.3s; margin-top: 0.5rem;
         }
-
-        form { margin-top: 1rem; display: grid; gap: 0.75rem; }
-
-        label {
-          display: block;
-          font-size: 0.85rem;
-          margin-bottom: 0.28rem;
-          color: #374151;
-          font-weight: 600;
-        }
-
-        .input {
-          width: 100%;
-          padding: 0.7rem 0.9rem;
-          border-radius: 8px;
-          border: 1px solid #e6e9ef;
-          outline: none;
-          font-size: 0.96rem;
-          transition: box-shadow var(--transition), border-color var(--transition);
-          box-sizing: border-box;
-          background: #fff;
-        }
-
-        .input:focus {
-          border-color: rgba(13,110,253,0.9);
-          box-shadow: 0 6px 18px rgba(13,110,253,0.08);
-        }
-
-        .row {
-          display: flex;
-          gap: 0.6rem;
-          align-items: center;
-        }
-
-        .remember {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          color: var(--muted);
-          font-size: 0.9rem;
-        }
-
-        .btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          padding: 0.62rem 0.85rem;
-          border-radius: 8px;
-          background: var(--primary);
-          color: #fff;
-          font-weight: 700;
-          border: none;
-          cursor: pointer;
-          transition: transform 120ms ease, box-shadow 120ms ease;
-          width: 100%;
-        }
-
-        .btn:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-          transform: none;
-        }
-
-        .btn:hover:not(:disabled) {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 20px rgba(13,110,253,0.12);
-        }
-
-        .error {
-          color: var(--danger);
-          font-size: 0.92rem;
-          margin-top: 0.4rem;
-          text-align: center;
-        }
-
-        .helper {
-          font-size: 0.9rem;
-          color: var(--muted);
-          text-align: center;
-          margin-top: 0.45rem;
-        }
-
-        .password-row {
-          display:flex;
-          gap:0.5rem;
-          align-items:center;
-        }
-
-        .toggle-pass {
-          background: transparent;
-          border: 1px solid #e6e9ef;
-          padding: 0.5rem;
-          border-radius: 8px;
-          cursor: pointer;
-          color: #374151;
-          font-size: 0.9rem;
-        }
-
-        .spinner {
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-          border: 2px solid rgba(255,255,255,0.25);
-          border-top-color: rgba(255,255,255,0.9);
-          animation: spin 800ms linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        @media (max-width: 480px) {
-          .login-card { padding: 1rem; }
-        }
+        .btn-login:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.3); }
+        .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
+        .error-msg { color: #fca5a5; background: rgba(220,38,38,0.1); padding: 10px; border-radius: 8px; font-size: 0.9rem; text-align: center; margin-bottom: 1rem; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
       `}</style>
-      <Navbar/>
-      <div className="login-page" role="main">
-        <div className="login-card" aria-labelledby="login-heading">
-          <div className="login-header">
-            <h2 id="login-heading">Sign in to QR Ticket</h2>
-            <div className="login-sub">Admin / Gate staff login</div>
-          </div>
 
-          <form onSubmit={handleLogin} aria-describedby={error ? "login-error" : undefined}>
-            <div>
-              <label htmlFor="username">Username</label>
-              <input
-                id="username"
-                className="input"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
-                required
-                aria-required="true"
-                aria-label="Username"
-              />
-            </div>
+      <div className="login-root">
+        <div className="glow" style={{top:'-10%', left:'-10%'}}></div>
+        <div className="glow" style={{bottom:'-10%', right:'-10%', background:'radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%)'}}></div>
 
-            <div>
-              <label htmlFor="password">Password</label>
-              <div className="password-row">
-                <input
-                  id="password"
-                  className="input"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                  aria-required="true"
-                  aria-label="Password"
-                />
-                <button
-                  type="button"
-                  className="toggle-pass"
-                  aria-pressed={showPassword}
-                  onClick={() => setShowPassword((s) => !s)}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-              </div>
-            </div>
+        <div className="login-card">
+          <h2 style={{color:'white', textAlign:'center', marginBottom:'0.5rem'}}>Welcome Back</h2>
+          <p style={{color:'#94a3b8', textAlign:'center', marginBottom:'2rem', fontSize:'0.9rem'}}>Admin / Staff Access Portal</p>
 
-            {error && (
-              <div id="login-error" role="alert" className="error" aria-live="assertive">
-                {error}
-              </div>
-            )}
+          {error && <div className="error-msg">{error}</div>}
 
-            <button className="btn" type="submit" disabled={loading}>
-              {loading ? <span className="spinner" aria-hidden="true" /> : "Login"}
+          <form onSubmit={handleLogin}>
+            <label style={{color:'#cbd5e1', fontSize:'0.9rem', marginBottom:'5px', display:'block'}}>Username</label>
+            <input 
+              name="username" type="text" className="inp" 
+              placeholder="Enter username" 
+              onChange={handleChange} required 
+            />
+
+            <label style={{color:'#cbd5e1', fontSize:'0.9rem', marginBottom:'5px', display:'block'}}>Password</label>
+            <input 
+              name="password" type="password" className="inp" 
+              placeholder="••••••••" 
+              onChange={handleChange} required 
+            />
+
+            <button type="submit" className="btn-login" disabled={loading}>
+              {loading ? "Authenticating..." : "Login to Dashboard"}
             </button>
-
-            <div className="helper">
-              <small>Need help? Contact system administrator.</small>
-            </div>
           </form>
+
+          <div style={{textAlign:'center', marginTop:'1.5rem', fontSize:'0.9rem', color:'#94a3b8'}}>
+            New Staff Member? 
+            <Link to="/register" style={{color:'#3b82f6', textDecoration:'none', fontWeight:'bold', marginLeft:'5px'}}>
+              Register Here
+            </Link>
+          </div>
         </div>
       </div>
     </>

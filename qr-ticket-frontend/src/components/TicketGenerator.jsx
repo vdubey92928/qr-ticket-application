@@ -3,7 +3,10 @@ import axiosClient from "../api/axiosClient";
 import TicketQrView from "./TicketQrView";
 import Navbar from "./layout/Navbar";
 import img from "../assets/gallery/p1.avif"
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
 const GenerateTicket = () => {
     const ticketRefs = useRef({});
 
@@ -107,13 +110,21 @@ const GenerateTicket = () => {
                 let index = 0;
                 for (let i = 0; i < payload.adult; i++) {
                     if (apiData[index]) {
+<<<<<<< HEAD
                         generatedTickets.adult.push({ ...apiData[index++], type: 'ADULT' });
+=======
+                        generatedTickets.adult.push({ ...apiData[index++], type: 'ADULT', });
+>>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
 
                     }
                 }
                 for (let i = 0; i < payload.kid; i++) {
                     if (apiData[index]) {
+<<<<<<< HEAD
                         generatedTickets.kid.push({ ...apiData[index++], type: 'KID' });
+=======
+                        generatedTickets.kid.push({ ...apiData[index++], type: 'KID', });
+>>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
 
                     }
                 }
@@ -126,6 +137,10 @@ const GenerateTicket = () => {
             console.warn("API Issue, using Demo Data.", error);
             window.alert("Ticket Generation failed");
 
+<<<<<<< HEAD
+=======
+            window.alert("Ticket generation failed....")
+>>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
             setTickets(null);
 
         } finally {
@@ -135,18 +150,47 @@ const GenerateTicket = () => {
 
     return (
         <div className="page-root">
-            <Navbar />
+            {/* <Navbar /> */}
             <style>{`
-                :root { --bg-dark: #0f172a; --text-primary: #f1f5f9; }
-                .page-root { min-height: 100vh; background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 100%); color: white; padding-bottom: 4rem; }
-                .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem; }
-                .form-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 2rem; border-radius: 15px; max-width: 500px; margin: 2rem auto; }
-                .custom-input { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #444; color: white; border-radius: 5px; margin-bottom: 1rem; }
-                .btn-generate { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-                .ticket-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
-                .section-title { font-size: 1.5rem; margin: 2rem 0 1rem; border-left: 5px solid #3b82f6; padding-left: 10px; }
-                .print-btn { background: #fff; color: black; border: none; padding: 5px 10px; width: 100%; margin-top: 5px; cursor: pointer; font-weight: bold; }
-            `}</style>
+    :root { --bg-dark: #0f172a; --text-primary: #f1f5f9; }
+    
+    /* Browser default margin hatane ke liye */
+    body { margin: 0; padding: 0; }
+
+    .page-root {
+        min-height: 100vh;
+        background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 100%);
+        color: white;
+        padding-bottom: 4rem;
+        padding-top: 0; /* Ensure Top Padding 0 ho */
+        overflow-x: hidden; /* Extra scroll hatane ke liye */
+    }
+
+    .container { 
+        max-width: 1100px; 
+        margin: 0 auto; 
+        /* Padding Top ko kam kar diya (Pehle 2rem tha) */
+        padding: 0.5rem 1rem 2rem 1rem; 
+    }
+    
+    .form-card { 
+        background: rgba(255, 255, 255, 0.1); 
+        backdrop-filter: blur(10px); 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        padding: 2rem; 
+        border-radius: 15px; 
+        max-width: 500px; 
+        /* Margin Top ko adjust kiya taaki Navbar se chipak ke na aaye par gap kam ho */
+        margin: 1rem auto 2rem auto; 
+    }
+
+    /* Baaki Styles Same hain */
+    .custom-input { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #444; color: white; border-radius: 5px; margin-bottom: 1rem; }
+    .btn-generate { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .ticket-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
+    .section-title { font-size: 1.5rem; margin: 2rem 0 1rem; border-left: 5px solid #3b82f6; padding-left: 10px; }
+    .print-btn { background: #fff; color: black; border: none; padding: 5px 10px; width: 100%; margin-top: 5px; cursor: pointer; font-weight: bold; }
+`}</style>
 
             <div className="container">
                 {/* FORM */}

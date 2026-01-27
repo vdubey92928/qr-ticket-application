@@ -7,6 +7,7 @@ import TicketGenerator from "../components/TicketGenerator";
 import About from "../pages/About";
 import Gallery from "../pages/Gallery";
 import Contact from "../pages/Contact";
+import RegistrationPage from "../pages/RegistrationPage";
 
 function AppRouter() {
     return (
@@ -19,6 +20,7 @@ function AppRouter() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/generate" element={<TicketGenerator />} />
+           <Route path="/register" element={<RegistrationPage />} />
         </Routes>
     );
 }

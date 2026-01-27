@@ -6,7 +6,7 @@ import AppRouter from "./router/AppRouter";
 function App() {
   return (
     <BrowserRouter>
-      {/* <Navbar /> */}
+      <Navbar />
       
       <AppRouter />
       
