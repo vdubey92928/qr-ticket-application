@@ -3,10 +3,6 @@ import axiosClient from "../api/axiosClient";
 import TicketQrView from "./TicketQrView";
 import Navbar from "./layout/Navbar";
 import img from "../assets/gallery/p1.avif"
-<<<<<<< HEAD
-
-=======
->>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
 const GenerateTicket = () => {
     const ticketRefs = useRef({});
 
@@ -110,21 +106,13 @@ const GenerateTicket = () => {
                 let index = 0;
                 for (let i = 0; i < payload.adult; i++) {
                     if (apiData[index]) {
-<<<<<<< HEAD
-                        generatedTickets.adult.push({ ...apiData[index++], type: 'ADULT' });
-=======
                         generatedTickets.adult.push({ ...apiData[index++], type: 'ADULT', });
->>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
 
                     }
                 }
                 for (let i = 0; i < payload.kid; i++) {
                     if (apiData[index]) {
-<<<<<<< HEAD
-                        generatedTickets.kid.push({ ...apiData[index++], type: 'KID' });
-=======
                         generatedTickets.kid.push({ ...apiData[index++], type: 'KID', });
->>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
 
                     }
                 }
@@ -137,10 +125,7 @@ const GenerateTicket = () => {
             console.warn("API Issue, using Demo Data.", error);
             window.alert("Ticket Generation failed");
 
-<<<<<<< HEAD
-=======
             window.alert("Ticket generation failed....")
->>>>>>> 4ba4865111ddf78ae23fa56f774da842ea0acae4
             setTickets(null);
 
         } finally {
