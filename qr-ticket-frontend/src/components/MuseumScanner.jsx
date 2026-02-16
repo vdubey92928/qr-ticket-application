@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import axiosClient from "../api/axiosClient";
 
-function GateScanner() {
+function MuseumScanner() {
 
     const scannerRef = useRef(null);
     const isCameraRunningRef = useRef(false);
@@ -10,7 +10,7 @@ function GateScanner() {
     const isTransitioningRef = useRef(false);
 
     const [detectedText, setDetectedText] = useState(null);
-    const [result, setResult] = useState(null); // full backend response
+    const [result, setResult] = useState(null);
 
     useEffect(() => {
         scannerRef.current = new Html5Qrcode("qr-reader");
@@ -75,12 +75,11 @@ function GateScanner() {
         }, 0);
     };
 
-    // 🔥 NEW API CALL
     const validateTicket = async (qrHash) => {
         try {
             const { data } = await axiosClient.post("/api/ticket/scan", {
                 qrHash,
-                location: "GATE"
+                location: "MUSEUM"
             });
 
             setResult(data);
@@ -94,12 +93,12 @@ function GateScanner() {
 
     const getBgColor = () => {
         if (!result) return "#fff";
-        return result.success ? "#d4edda" : "#f8d7da"; // green/red
+        return result.success ? "#d4edda" : "#f8d7da";
     };
 
     return (
         <div style={{ padding: 20, background: getBgColor(), minHeight: "100vh" }}>
-            <h2 className="text-center mb-3">Gate QR Scanner</h2>
+            <h2 className="text-center mb-3">Museum QR Scanner</h2>
 
             <div
                 id="qr-reader"
@@ -128,4 +127,4 @@ function GateScanner() {
     );
 }
 
-export default GateScanner;
+export default MuseumScanner;

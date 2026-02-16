@@ -1,90 +1,88 @@
 package com.vivekanand.qrticket.entity;
 
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.vivekanand.qrticket.enums.TicketStatus;
+import com.vivekanand.qrticket.enums.ScanLocation;
+import com.vivekanand.qrticket.enums.ScanResult;
 import com.vivekanand.qrticket.enums.TicketType;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "entry_logs")
 public class EntryLog {
 
-	@Id
-	@GeneratedValue
-	@Column(name = "id", nullable = false, updatable = false)
-	private UUID id;
+    @Id
+    @GeneratedValue
+    @Column(nullable = false, updatable = false)
+    private UUID id;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "ticket_id", nullable = false)
-	private Ticket ticket;
+    // Which ticket was scanned
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
-	@Column(name = "scan_result", nullable = false, length = 20)
-	@Enumerated(EnumType.STRING)
-	private TicketStatus scanResult;
+    // Where scanning happened (GATE / MUSEUM)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "location", nullable = false)
+    private ScanLocation location;
 
-	@Column(name = "scanned_at", nullable = false)
-	private LocalDateTime scannedAt;
-	
-	@Column( nullable = false, length = 20)
-	@Enumerated(EnumType.STRING)
-	private TicketType type;
+    // Result of scan
+    @Enumerated(EnumType.STRING)
+    @Column(name = "scan_result", nullable = false)
+    private ScanResult scanResult;
 
-	public TicketType getType() {
-		return type;
-	}
+    // Ticket type snapshot for reporting
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ticket_type", nullable = false)
+    private TicketType ticketType;
 
-	public void setType(TicketType type) {
-		this.type = type;
-	}
+    @Column(name = "scanned_at", nullable = false)
+    private LocalDateTime scannedAt;
 
-	@PrePersist
-	protected void onScan() {
-		this.scannedAt = LocalDateTime.now();
-	}
+    public EntryLog() {}
 
-	public UUID getId() {
-		return id;
-	}
+    @PrePersist
+    public void onCreate() {
+        this.scannedAt = LocalDateTime.now();
+    }
 
+    // ===== Getters & Setters =====
 
-	public Ticket getTicket() {
-		return ticket;
-	}
+    public UUID getId() {
+    	return id;
+    }
 
-	public TicketStatus getScanResult() {
-		return scanResult;
-	}
+    public Ticket getTicket() {
+    	return ticket;
+    }
+    public void setTicket(Ticket ticket) {
+    	this.ticket = ticket; 
+    }
 
+    public ScanLocation getLocation() {
+    	return location;
+    }
+    public void setLocation(ScanLocation location) { 
+    	this.location = location;
+    }
 
-	public LocalDateTime getScannedAt() {
-		return scannedAt;
-	}
+    public ScanResult getScanResult() { 
+    	return scanResult; 
+    }
+    public void setScanResult(ScanResult scanResult) {
+    	this.scanResult = scanResult; 
+    }
 
-	public EntryLog() {
-		
-	}
+    public TicketType getTicketType() {
+    	return ticketType;
+    }
+    public void setTicketType(TicketType ticketType) {
+    	this.ticketType = ticketType;
+    }
 
-	public void setTicket(Ticket ticket) {
-		this.ticket = ticket;
-	}
-
-	public void setScanResult(TicketStatus previouslyUsed) {
-		this.scanResult = previouslyUsed;
-	}
-	
-	
+    public LocalDateTime getScannedAt() { 
+    	return scannedAt; 
+    }
 }

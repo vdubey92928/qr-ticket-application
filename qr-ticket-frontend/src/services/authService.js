@@ -1,17 +1,17 @@
-// src/services/authService.js
+import axiosClient from "../api/axiosClient";
 
-import axios from "axios";
+// ================= LOGIN =================
+export const login = async (credentials) => {
+    try {
+        const response = await axiosClient.post(
+            "/api/auth/login",
+            credentials   // { username, password, role }
+        );
 
-const API_URL = "http://localhost:8082/api/auth";
+        return response.data;
 
-export const login = async (username, password) => {
-    console.log(username, password);
-
-    const response = await axios.post(`${API_URL}/login`, {
-        username,
-        password
-    });
-
-
-    return response.data;
+    } catch (error) {
+        // Pass backend error message to UI
+        throw error;
+    }
 };

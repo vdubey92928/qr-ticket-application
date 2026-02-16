@@ -1,39 +1,40 @@
 import TicketGenerator from "../components/TicketGenerator";
 import TicketTable from "../components/TicketTable";
 import EntryLogTable from "../components/EntryLogTable";
-import { useState } from "react";
-import GateScanner from "../components/GateScanner";
 
 function AdminPage() {
-    const [isvalidating, setIsValidateing] = useState(false);
+
     return (
-        <div style={{ padding: "20px" }}>
-            {isvalidating && (
-                <>
-                    <button onClick={() => setIsValidateing(false)}>stop validate Ticket</button>
-                    <GateScanner />
-                </>
-            )}
-            {!isvalidating &&
-                <button onClick={() => setIsValidateing(true)}>ticket validation </button>
-            }
+        <div className="container py-4">
 
-            <h2>Admin Dashboard</h2>
+            <h1 className="mb-4 text-center">Admin Dashboard</h1>
 
-            {/* SECTION 1: Ticket Generation */}
-            <section style={{ marginBottom: "40px" }}>
+            {/* QUICK NAV BUTTONS */}
+            <div className="d-flex justify-content-center gap-3 mb-5">
+                <a href="/gate-scanner" className="btn btn-primary">
+                    Open Gate Scanner
+                </a>
+
+                <a href="/museum-scanner" className="btn btn-warning">
+                    Open Museum Scanner
+                </a>
+            </div>
+
+            {/* TICKET GENERATION */}
+            <section className="mb-5">
                 <TicketGenerator />
             </section>
 
-            {/* SECTION 2: Tickets Table */}
-            <section style={{ marginBottom: "40px" }}>
+            {/* TICKET TABLE */}
+            <section className="mb-5">
                 <TicketTable />
             </section>
 
-            {/* SECTION 3: Entry Logs */}
+            {/* ENTRY LOGS */}
             <section>
                 <EntryLogTable />
             </section>
+
         </div>
     );
 }

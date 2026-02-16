@@ -1,6 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; 
-import Navbar from "../components/layout/Navbar";
+import { Link } from "react-router-dom";
 import p1 from "../assets/gallery/p1.avif";
 import p2 from "../assets/gallery/p2.jpeg";
 import p3 from "../assets/gallery/p3.jpg";
@@ -23,6 +22,8 @@ const Home = () => {
           --card-bg: rgba(255, 255, 255, 0.04);
           --max-width: 1180px;
         }
+
+        
 
         .home-root {
           font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -208,13 +209,88 @@ const Home = () => {
             .hero-button-wrap { bottom: 12%; width: 90%; text-align: center; }
             .hero-button { width: 100%; justify-content: center; }
         }
+
+        /* ================= FEATURE SECTION ================= */
+.fc-section-padding {
+  padding: 80px 0;
+}
+
+.fc-section-title {
+  font-weight: 700;
+  font-size: 2.2rem;
+}
+
+/* ================= FEATURE CARD ================= */
+.fc-feature-card {
+  height: 100%;
+  background: #817979;
+  border-radius: 18px;
+  padding: 35px 30px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.fc-feature-card h4 {
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.fc-feature-card p {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Hover effect */
+.fc-feature-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.18);
+}
+
+/* Accent underline */
+.fc-feature-card::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8724f8, #5b17c5);
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+
+.fc-feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* ================= CTA BUTTON ================= */
+.fc-hero-button {
+  display: inline-block;
+  background: #8724f8;
+  color: #e6b9b9;
+  padding: 14px 34px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fc-hero-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(135, 36, 248, 0.4);
+  color: #e0cbcb;
+}
+
       `}</style>
 
       <div className="home-root">
         <main>
           {/* HERO */}
           <section className="hero-wrap" aria-label="Hero">
-            
+
             {/* 1. SLIDER BACKGROUND */}
             <div className="slide s1" />
             <div className="slide s2" />
@@ -231,10 +307,10 @@ const Home = () => {
 
             {/* 3. CENTERED ANIMATED TEXT */}
             <div className="hero-title-wrap">
-                <h1 className="animated-title">
-                    RASHTRIYA<br />PRERANA STHAL
-                </h1>
-                <p className="animated-subtitle">Lucknow's Pride • Symbol of Justice</p>
+              <h1 className="animated-title">
+                RASHTRIYA<br />PRERANA STHAL
+              </h1>
+              <p className="animated-subtitle">Lucknow's Pride • Symbol of Justice</p>
             </div>
 
             {/* 4. BUTTON (MIDDLE-BOTTOM) */}
@@ -248,54 +324,62 @@ const Home = () => {
 
           {/* HOW IT WORKS */}
           <div id="about-section">
-            <About/>
+            <About />
           </div>
-          {/* <section className="section-padding">
-            <div className="container">
-              <h2 className="section-title">How It Works</h2>
-              <div className="grid-cards">
-                <div className="card">
-                  <h4>1. Enter Details</h4>
-                  <p>Fill out the ticket form with attendee information and submit the request securely.</p>
-                </div>
-                <div className="card">
-                  <h4>2. Generate QR</h4>
-                  <p>A unique, encrypted QR code is instantly created and assigned to the specific ticket.</p>
-                </div>
-                <div className="card">
-                  <h4>3. Scan & Validate</h4>
-                  <p>Staff scan the QR code at entry points to validate access and log attendance in real-time.</p>
-                </div>
-              </div>
-            </div>
-          </section> */}
 
           {/* FEATURES */}
-          <section className="section-padding">
+          <section className="fc-section-padding fc-features-section">
             <div className="container">
-              <h2 className="section-title">Key Features</h2>
-              <div className="grid-cards">
-                <div className="card">
-                  <h4>Secure QR</h4>
-                  <p>Advanced encryption payloads prevent forgery and ensure ticket authenticity.</p>
+
+              <h2 className="fc-section-title text-center mb-5">
+                Key Features
+              </h2>
+
+              <div className="row g-4 justify-content-center">
+
+                <div className="col-md-4">
+                  <div className="fc-feature-card">
+                    <h4>🔐 Secure QR</h4>
+                    <p className="text-white">
+                      Advanced encrypted QR payloads prevent forgery and ensure
+                      ticket authenticity during validation.
+                    </p>
+                  </div>
                 </div>
-                <div className="card">
-                  <h4>Real-time Tracking</h4>
-                  <p>Live dashboard logs for every scan, giving you instant attendee insights.</p>
+
+                <div className="col-md-4">
+                  <div className="fc-feature-card">
+                    <h4>📊 Real-time Tracking</h4>
+                    <p className="text-white">
+                      Live dashboard logs every scan instantly, providing
+                      real-time insights into attendee entry status.
+                    </p>
+                  </div>
                 </div>
-                <div className="card">
-                  <h4>Easy Integrations</h4>
-                  <p>Compatible with handheld scanners and standard mobile camera browsers.</p>
+
+                <div className="col-md-4">
+                  <div className="fc-feature-card">
+                    <h4>🔗 Easy Integrations</h4>
+                    <p className="text-white">
+                      Compatible with handheld scanners and standard mobile
+                      camera browsers without extra setup.
+                    </p>
+                  </div>
                 </div>
+
               </div>
 
-              <div style={{ textAlign: "center", marginTop: "3rem" }}>
-                <Link to="/generate" className="hero-button" style={{ fontSize: "1rem", padding: "12px 24px" }}>
-                  Get Started — It's Free
+              {/* CTA */}
+              <div className="text-center mt-5">
+                <Link to="/generate" className="fc-hero-button">
+                  Get Started — It’s Free
                 </Link>
               </div>
+
             </div>
           </section>
+
+
         </main>
       </div>
     </>

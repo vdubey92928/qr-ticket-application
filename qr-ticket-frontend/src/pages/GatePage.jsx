@@ -2,10 +2,14 @@ import GateScanner from "../components/GateScanner";
 
 function GatePage() {
     return (
-        <div>
-            <h2>Park Entry Gate</h2>
-            <GateScanner />
+
+        <div className="row">
+            <h2 className="text-center ">Park Entry Gate</h2>
+            <div className="col-sm-3 mx-auto ">
+                <GateScanner />
+            </div>
         </div>
+
     );
 }
 

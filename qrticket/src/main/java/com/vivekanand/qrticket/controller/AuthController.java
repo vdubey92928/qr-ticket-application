@@ -1,54 +1,70 @@
 package com.vivekanand.qrticket.controller;
 
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.vivekanand.qrticket.dto.LoginRequest;
 import com.vivekanand.qrticket.dto.LoginResponse;
-//import com.vivekanand.qrticket.security.JwtUtil;
+import com.vivekanand.qrticket.enums.LoginRole;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-//    private final AuthenticationManager authenticationManager;
-//    private final JwtUtil jwtUtil;
+    private static final String ADMIN_USER = "admin";
+    private static final String ADMIN_PASS = "admin123";
 
-//    public AuthController(AuthenticationManager authenticationManager,
-//                          JwtUtil jwtUtil) {
-//        this.authenticationManager = authenticationManager;
-//        this.jwtUtil = jwtUtil;
-//    }
+    private static final String GATE_USER = "gate";
+    private static final String GATE_PASS = "gate123";
+
+    private static final String MUSEUM_USER = "museum";
+    private static final String MUSEUM_PASS = "museum123";
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
 
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.getUsername(),
-//                        request.getPassword()
-//                )
-//        );
+        // Safety check
+        if (request.getRole() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse(null, null, "Role not provided", false));
+        }
 
-//        String role = authentication.getAuthorities()
-//                .stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .findFirst()
-//                .orElse("");
+        // ADMIN LOGIN
+        if (LoginRole.ADMIN.equals(request.getRole()) &&
+                ADMIN_USER.equals(request.getUsername()) &&
+                ADMIN_PASS.equals(request.getPassword())) {
+            return ResponseEntity.ok(successResponse(LoginRole.ADMIN));
+        }
 
-//        role = role.replace("ROLE_", "");
+        // GATE LOGIN
+        if (LoginRole.GATE.equals(request.getRole()) &&
+                GATE_USER.equals(request.getUsername()) &&
+                GATE_PASS.equals(request.getPassword())) {
+            return ResponseEntity.ok(successResponse(LoginRole.GATE));
+        }
 
-//        String token = jwtUtil.generateToken(
-//                request.getUsername(),
-//                role
-//        );
+        // MUSEUM LOGIN
+        if (LoginRole.MUSEUM.equals(request.getRole()) &&
+                MUSEUM_USER.equals(request.getUsername()) &&
+                MUSEUM_PASS.equals(request.getPassword())) {
+            return ResponseEntity.ok(successResponse(LoginRole.MUSEUM));
+        }
 
-        return new LoginResponse("bhskvwh", "GATE");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new LoginResponse(null, null, "Invalid username or password", false));
+    }
+
+    private LoginResponse successResponse(LoginRole role) {
+        String token = "SESSION-" + UUID.randomUUID();
+
+        return new LoginResponse(
+                token,
+                role,
+                "Login successful",
+                true
+        );
     }
 }

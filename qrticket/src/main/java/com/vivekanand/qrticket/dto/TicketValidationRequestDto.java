@@ -1,12 +1,11 @@
 package com.vivekanand.qrticket.dto;
 
-
-import java.time.LocalDateTime;
+import com.vivekanand.qrticket.enums.ScanLocation;
 
 public class TicketValidationRequestDto {
 
     private String qrHash;
-    private LocalDateTime visitDate;
+    private ScanLocation location;
 
     public String getQrHash() {
         return qrHash;
@@ -16,11 +15,11 @@ public class TicketValidationRequestDto {
         this.qrHash = qrHash;
     }
 
-    public LocalDateTime getVisitDate() {
-        return visitDate;
+    public ScanLocation getLocation() {
+        return location;
     }
 
-    public void setVisitDate(LocalDateTime visitDate) {
-        this.visitDate = visitDate;
+    public void setLocation(ScanLocation location) {
+        this.location = location;
     }
 }
