@@ -71,6 +71,10 @@ public class Ticket {
     public boolean isExpired() {
         return visitDate.isBefore(LocalDate.now());
     }
+    
+    public boolean isValidToday() {
+    	return visitDate.isAfter(LocalDate.now());
+    }
 
     public boolean canEnterGate() {
         if (state != TicketState.ACTIVE) return false;

@@ -1,0 +1,88 @@
+/* ============================================================
+   QrTicket — CSS Variables & Theme System
+   ============================================================ */
+
+/* ---- LIGHT THEME ---- */
+[data-theme="light"] {
+    --bg-primary: #f0f4ff;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-sidebar: #1a1f3c;
+    --bg-navbar: rgba(255, 255, 255, 0.92);
+
+    --text-primary: #0f1629;
+    --text-secondary: #3a4566;
+    --text-muted: #7b86a8;
+    --text-inverse: #ffffff;
+
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-accent: rgba(59, 130, 246, 0.3);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.14);
+    --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.2);
+
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.9);
+}
+
+/* ---- DARK THEME (DEFAULT) ---- */
+[data-theme="dark"],
+:root {
+    --bg-primary: #060d1f;
+    --bg-secondary: #0d1630;
+    --bg-card: #111827;
+    --bg-sidebar: #080f22;
+    --bg-navbar: rgba(6, 13, 31, 0.95);
+
+    --text-primary: #f0f6ff;
+    --text-secondary: #a8bbd8;
+    --text-muted: #5a6b87;
+    --text-inverse: #060d1f;
+
+    --border-color: rgba(255, 255, 255, 0.07);
+    --border-accent: rgba(59, 130, 246, 0.4);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 24px rgba(59, 130, 246, 0.35);
+
+    --glass-bg: rgba(13, 22, 48, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+/* ---- BRAND PALETTE (SHARED) ---- */
+:root {
+    --brand-blue: #3b82f6;
+    --brand-indigo: #6366f1;
+    --brand-purple: #8b5cf6;
+    --brand-cyan: #06b6d4;
+    --brand-green: #10b981;
+    --brand-amber: #f59e0b;
+    --brand-red: #ef4444;
+    --brand-orange: #f97316;
+
+    --gradient-brand: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    --gradient-hero: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #0f172a 100%);
+    --gradient-card: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
+    --gradient-glow: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-pill: 9999px;
+
+    --font-display: 'Sora', 'Segoe UI', sans-serif;
+    --font-body: 'DM Sans', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+    --transition-fast: 0.18s ease;
+    --transition-base: 0.28s ease;
+    --transition-slow: 0.45s ease;
+
+    --navbar-height: 68px;
+    --sidebar-width: 260px;
+}

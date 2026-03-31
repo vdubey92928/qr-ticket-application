@@ -7,7 +7,7 @@ const About = () => {
 
   return (
     <>
-      
+
       <style>{`
         :root {
           --bg-dark: #0f172a;
@@ -267,10 +267,10 @@ const About = () => {
 
             <div className="hero-image-wrap">
               {/* Using a high-quality Unsplash image as placeholder for the park */}
-              <img 
-                src="https://images.unsplash.com/photo-1596895111956-bf1cf0599ce5?q=80&w=1200&auto=format&fit=crop" 
-                alt="Prerna Sthal View" 
-                className="hero-img" 
+              <img
+                src="https://images.unsplash.com/photo-1596895111956-bf1cf0599ce5?q=80&w=1200&auto=format&fit=crop"
+                alt="Prerna Sthal View"
+                className="hero-img"
               />
               <div className="overlay-grad"></div>
             </div>
@@ -281,7 +281,7 @@ const About = () => {
             <div className="glass-card">
               <h2 className="section-title">History & Significance</h2>
               <p style={{ lineHeight: '1.8', color: '#cbd5e1', marginBottom: '1rem' }}>
-                Conceived as a landmark public space, <strong>Rashtriya Prerna Sthal</strong> transformed reclaimed land into a cultural park that blends art, history, and environmental renewal. 
+                Conceived as a landmark public space, <strong>Rashtriya Prerna Sthal</strong> transformed reclaimed land into a cultural park that blends art, history, and environmental renewal.
                 It stands as a symbol of pride for Lucknow, honoring the ideals and legacy of national leaders through monumental sculptures and iconic architecture.
               </p>
               <p style={{ lineHeight: '1.8', color: '#cbd5e1' }}>
@@ -290,7 +290,7 @@ const About = () => {
             </div>
 
             <div className="glass-card">
-              <h3 style={{fontSize:'1.3rem', marginBottom:'1rem', color:'#fff'}}>Key Highlights</h3>
+              <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#fff' }}>Key Highlights</h3>
               <ul className="feature-list">
                 <li>Monumental Bronze Sculptures</li>
                 <li>Interactive Museum Galleries</li>
@@ -325,7 +325,7 @@ const About = () => {
             <div className="info-item">
               <h3>🕒 Opening Hours</h3>
               <p>11:00 AM – 8:00 PM (Daily)</p>
-              <p style={{fontSize:'0.8rem', opacity:0.7}}>(Closed on Mondays)</p>
+              <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>(Closed on Mondays)</p>
             </div>
             <div className="info-item">
               <h3>📍 Location</h3>
@@ -340,7 +340,7 @@ const About = () => {
 
           {/* FAQ SECTION */}
           <section className="faq-container">
-            <h2 className="section-title" style={{textAlign:'center', border:'none'}}>Frequently Asked Questions</h2>
+            <h2 className="section-title" style={{ textAlign: 'center', border: 'none' }}>Frequently Asked Questions</h2>
 
             {[
               {
@@ -380,9 +380,9 @@ const About = () => {
 
           {/* BOTTOM CTA */}
           <section className="cta-bottom">
-            <h3 style={{fontSize:'1.8rem', marginBottom:'1rem'}}>Ready to Experience History?</h3>
-            <p style={{color:'var(--text-muted)', marginBottom:'2rem'}}>Book your tickets online to skip the queue and get direct access.</p>
-            <Link to="/generate" className="btn primary" style={{padding:'16px 40px', fontSize:'1.1rem'}}>
+            <h3 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>Ready to Experience History?</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Book your tickets online to skip the queue and get direct access.</p>
+            <Link to="/generate" className="btn primary" style={{ padding: '16px 40px', fontSize: '1.1rem' }}>
               Book Tickets Now
             </Link>
           </section>

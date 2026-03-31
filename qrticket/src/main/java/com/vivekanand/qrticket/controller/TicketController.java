@@ -110,7 +110,7 @@ public class TicketController {
 
             case VALID:
                 return new TicketValidationResponseDto(result, "Entry Allowed", true);
-
+ 
             case EXPIRED:
                 return new TicketValidationResponseDto(result, "Ticket Expired", false);
 
@@ -123,6 +123,9 @@ public class TicketController {
             case WRONG_LOCATION:
                 return new TicketValidationResponseDto(result, "Invalid Ticket For This Location", false);
 
+            case NOT_FOR_TODAY:
+            	return new TicketValidationResponseDto(result, "Ticket is booked for future date", false);
+            	
             case NOT_EXISTS:
             default:
                 return new TicketValidationResponseDto(result, "Invalid Ticket", false);

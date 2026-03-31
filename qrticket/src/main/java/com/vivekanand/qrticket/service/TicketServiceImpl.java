@@ -3,6 +3,7 @@ package com.vivekanand.qrticket.service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
@@ -48,22 +49,22 @@ public class TicketServiceImpl implements TicketService {
         List<TicketInfo> tickets = new ArrayList<>();
 
         for (int i = 0; i < totalTicket.getAdult(); i++)
-            tickets.add(createTicket(TicketType.ADULT, totalTicket.getValidFor()));
+            tickets.add(createTicket(TicketType.ADULT, totalTicket.getValidFor(),totalTicket.getVisitDate()));
 
         for (int i = 0; i < totalTicket.getKid(); i++)
-            tickets.add(createTicket(TicketType.KID, totalTicket.getValidFor()));
+            tickets.add(createTicket(TicketType.KID, totalTicket.getValidFor(),totalTicket.getVisitDate()));
 
         return tickets;
     }
 
-    private TicketInfo createTicket(TicketType type, TicketValidFor validFor) {
+    private TicketInfo createTicket(TicketType type, TicketValidFor validFor,LocalDate visitDate) {
 
         String rawValue = UUID.randomUUID() + "-" + System.nanoTime();
         String qrHash = generateHash(rawValue);
 
         Ticket ticket = new Ticket();
         ticket.setQrHash(qrHash);
-        ticket.setVisitDate(LocalDate.now());
+        ticket.setVisitDate(visitDate);
         ticket.setType(type);
         ticket.setTicketValidFor(validFor);
 
@@ -99,6 +100,14 @@ public class TicketServiceImpl implements TicketService {
         Ticket ticket = optionalTicket.get();
 
         // Expiry check
+        
+        if (ticket.isValidToday()) {
+            ticket.setState(TicketState.NOT_FOR_TODAY);
+            ticketRepository.save(ticket);
+            saveEntryLog(ticket, location, ScanResult.NOT_FOR_TODAY);
+            return ScanResult.NOT_FOR_TODAY;
+        }
+        
         if (ticket.isExpired()) {
             ticket.setState(TicketState.EXPIRED);
             ticketRepository.save(ticket);

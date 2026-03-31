@@ -124,6 +124,7 @@ const GenerateTicket = () => {
                                                 name="visitDate"
                                                 className="form-control"
                                                 onChange={handleChange}
+                                                value={formData.visitDate}
                                                 required
                                             />
                                         </div>

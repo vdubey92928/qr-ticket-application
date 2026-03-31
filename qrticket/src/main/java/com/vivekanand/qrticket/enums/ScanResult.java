@@ -7,5 +7,6 @@ public enum ScanResult {
     EXPIRED,
     WRONG_LOCATION,
     ALREADY_SCANNED,
-    GATE_FIRST_REQUIRED
+    GATE_FIRST_REQUIRED,
+    NOT_FOR_TODAY
 }
