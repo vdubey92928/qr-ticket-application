@@ -1,14 +1,14 @@
-# Use official Java image
 FROM eclipse-temurin:17-jdk
 
-# Set working directory
 WORKDIR /app
 
-# Copy everything
 COPY . .
 
-# Build the app
-RUN chmod +x mvnw && ./mvnw clean install -DskipTests
+# Build the jar
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
-# Run the app
-CMD ["java", "-jar", "target/*.jar"]
+# Debug: list files (IMPORTANT)
+RUN ls -l target
+
+# Run exact jar
+CMD ["sh", "-c", "java -jar $(ls target/*.jar)"]
