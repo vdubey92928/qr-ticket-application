@@ -16,6 +16,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.vivekanand.qrticket.util.JwtFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 public class SecurityConfig {
 	
@@ -24,7 +26,16 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChains(HttpSecurity http) throws Exception{
-		System.out.println("🔥 SECURITY CONFIG ACTIVE");
+	
+		http.exceptionHandling(ex -> ex
+			    .authenticationEntryPoint((request, response, authException) -> {
+			        response.setContentType("application/json");
+			        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			        response.getWriter().write(
+			            "{\"success\":false,\"message\":\"Unauthorized\"}"
+			        );
+			    })
+			);
 		http
 			.csrf(csrf->csrf.disable())
 			.cors(cors->{})
@@ -32,6 +43,7 @@ public class SecurityConfig {
 			.httpBasic(basic->basic.disable())
 			.authorizeHttpRequests(auth->auth
 				.requestMatchers("/api/auth/**").permitAll()
+				.requestMatchers("/api/payments/create-order").permitAll()
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -39,8 +39,63 @@ const GenerateTicket = () => {
         setTimeout(() => printWindow.print(), 500);
     };
 
-    const handleGenerate = async (e) => {
+    const handlePayment = async (e) => {
         e.preventDefault();
+
+
+        if (!formData.visitDate) {
+            alert("Select visit date");
+            return;
+        }
+
+        if (formData.adults === 0 && formData.kids === 0) {
+            alert("Select at least 1 ticket");
+            return;
+        }
+        // 🔥 call your backend
+        const payload = {
+            adult: Number(formData.adults),
+            kid: Number(formData.kids),
+            validFor: formData.validFor,
+            visitDate: formData.visitDate
+        };
+
+        const res = await axiosClient.post("/api/payments/create-order", payload);
+        const order = res.data;
+
+        // 🔥 Razorpay config
+        const options = {
+            key: "rzp_test_SY8Fwfsad7Tdzc", // from Razorpay dashboard
+            amount: order.amount,
+            currency: order.currency,
+            name: "QR Ticket System",
+            description: "Test Payment",
+            order_id: order.id,
+
+            handler: async function (response) {
+
+                // 🔥 Step 1: verify payment
+                await axiosClient.post("/api/payments/verify", {
+                    orderId: response.razorpay_order_id,
+                    paymentId: response.razorpay_payment_id,
+                    signature: response.razorpay_signature
+                });
+
+                // 🔥 Step 2: generate ticket
+                handleGenerate()
+
+            },
+
+            theme: {
+                color: "#3399cc"
+            }
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+    };
+
+    const handleGenerate = async () => {
 
         if (!formData.visitDate) {
             alert("Please select visit date");
@@ -100,7 +155,7 @@ const GenerateTicket = () => {
                                         🎟 Generate Ticket
                                     </h3>
 
-                                    <form onSubmit={handleGenerate}>
+                                    <form onSubmit={handlePayment}>
 
                                         <div className="mb-3">
                                             <label>Adults</label>

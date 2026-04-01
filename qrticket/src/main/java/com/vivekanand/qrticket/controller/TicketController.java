@@ -14,9 +14,11 @@ import com.vivekanand.qrticket.dto.TicketInfo;
 import com.vivekanand.qrticket.dto.TicketValidationRequestDto;
 import com.vivekanand.qrticket.dto.TicketValidationResponseDto;
 import com.vivekanand.qrticket.dto.TotalTicket;
+import com.vivekanand.qrticket.entity.Payment;
 import com.vivekanand.qrticket.entity.Ticket;
 import com.vivekanand.qrticket.enums.ScanResult;
 import com.vivekanand.qrticket.enums.TicketType;
+import com.vivekanand.qrticket.repository.PaymentRepository;
 import com.vivekanand.qrticket.repository.TicketRepository;
 import com.vivekanand.qrticket.service.TicketService;
 import com.vivekanand.qrticket.util.QRCodeGenerator;
@@ -25,23 +27,44 @@ import com.vivekanand.qrticket.util.QRCodeGenerator;
 @RequestMapping("/api/ticket")
 public class TicketController {
 
-    private final TicketService ticketService;
+	private final TicketService ticketService;
     private final TicketRepository ticketRepository;
+    private final PaymentRepository paymentRepository;
 
     public TicketController(
             TicketService ticketService,
-            TicketRepository ticketRepository) {
+            TicketRepository ticketRepository,
+            PaymentRepository paymentRepository) {
         this.ticketService = ticketService;
         this.ticketRepository = ticketRepository;
+        this.paymentRepository=paymentRepository;
     }
 
     // ======================================================
     // GENERATE TICKETS
     // ======================================================
     @PostMapping("/generate")
-    public ResponseEntity<List<TicketInfo>> generateTickets(@RequestBody TotalTicket totalTicket) {
-        return new ResponseEntity<>(ticketService.generateTicket(totalTicket), HttpStatus.CREATED);
+    public ResponseEntity<?> generateTicket(
+            @RequestBody TotalTicket ticket,
+            @RequestParam String paymentId) {
+
+        // 🔥 check payment exists
+        Payment payment = paymentRepository.findByPaymentId(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        if (!payment.getStatus().equals("SUCCESS")) {
+            throw new RuntimeException("Payment not completed");
+        }
+
+        try {
+            return new ResponseEntity<>(ticketService.generateTicket(ticket), HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();  // 🔥 MUST
+            throw e;
+        }
+        
     }
+   
 
     // ======================================================
     // GET TICKET DETAILS WITH QR IMAGE

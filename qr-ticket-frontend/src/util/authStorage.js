@@ -2,6 +2,33 @@
 
 import axios from "axios";
 
+
+import { jwtDecode } from "jwt-decode";
+
+export const isTokenValid = () => {
+    const token = getToken();
+
+    if (!token) return false;
+
+    try {
+        const decoded = jwtDecode(token);
+
+        const currentTime = Date.now() / 1000;
+
+        if (decoded.exp < currentTime) {
+            return false; // expired
+        }
+
+        return true;
+
+    } catch (error) {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("userRole");
+        return false;
+    }
+};
+
+
 export const saveAuth = (token, role) => {
     localStorage.setItem("jwtToken", token);
     localStorage.setItem("userRole", role);

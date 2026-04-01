@@ -1,7 +1,6 @@
 package com.vivekanand.qrticket.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import com.vivekanand.qrticket.enums.TicketValidFor;
 

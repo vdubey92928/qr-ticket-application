@@ -1,9 +1,8 @@
 package com.vivekanand.qrticket.controller;
 
-import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,19 +50,18 @@ public class AuthController {
 	        );
 
 	    } catch (Exception e) {
-	        return ResponseEntity.status(401)
-	                .body(new LoginResponse(null, null, e.getMessage(), false));
+	    	throw new RuntimeException("Invalid username or password");
 	    }
 	}
 	
-	@GetMapping("/validate")
-	public ResponseEntity<?> validate(Authentication authentication) {
-
-	    if (authentication == null || !authentication.isAuthenticated()) {
-	        return ResponseEntity.status(401).body("Invalid token");
-	    }
-
-	    return ResponseEntity.ok("Valid token");
-	}
+//	@GetMapping("/validate")
+//	public ResponseEntity<?> validate(Authentication authentication) {
+//
+//	    if (authentication == null || !authentication.isAuthenticated()) {
+//	        return ResponseEntity.status(401).body("Invalid token");
+//	    }
+//
+//	    return ResponseEntity.ok("Valid token");
+//	}
    
 }

@@ -1,4 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -12,42 +14,18 @@ import TicketGenerator from "../components/TicketGenerator";
 import GateScanner from "../components/GateScanner";
 import MuseumScanner from "../components/MuseumScanner";
 
-import { isAuthenticated, getRole } from "./../util/authStorage";
-import { Navigate } from "react-router-dom";
+import { isTokenValid, getRole } from "../util/authStorage";
 
-import { useEffect, useState } from "react";
-import { validateToken } from "./../util/authStorage";
 
 const HomeRedirect = () => {
 
-    const [loading, setLoading] = useState(true);
-    const [valid, setValid] = useState(false);
+    if (!isTokenValid()) {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("userRole");
+        return <Home />;
+    }
 
-    useEffect(() => {
-        const check = async () => {
-            const isValid = await validateToken();
-            setValid(isValid);
-            setLoading(false);
-
-            if (!isValid) {
-                localStorage.removeItem("jwtToken");
-                localStorage.removeItem("userRole");
-            }
-        };
-
-
-        check();
-
-
-    }, []);
-
-
-
-    if (loading) return <div>Loading...</div>;
-
-    if (!valid) return <Home />;
-
-    const role = localStorage.getItem("userRole");
+    const role = getRole();
 
     if (role === "ADMIN") return <Navigate to="/admin" />;
     if (role === "GATE") return <Navigate to="/gate-scanner" />;
@@ -57,49 +35,91 @@ const HomeRedirect = () => {
 };
 
 
+// PRIVATE ROUTE 
 const PrivateRoute = ({ children }) => {
-    return isAuthenticated() ? children : <Navigate to="/" />;
+    return isTokenValid() ? children : <Navigate to="/" />;
 };
 
+
 function AppRouter() {
+    //auto logout on token expiry
+    useEffect(() => {
+
+        const token = localStorage.getItem("jwtToken");
+        if (!token) return;
+
+        try {
+            const decoded = jwtDecode(token);
+
+            const expiryTime = decoded.exp * 1000;
+            const timeout = expiryTime - Date.now();
+
+            console.log("⏳ Auto logout in:", timeout);
+
+            if (timeout > 0) {
+                setTimeout(() => {
+                    console.log("🔥 Auto logout triggered");
+                    localStorage.clear();
+                    window.location.href = "/";
+                }, timeout);
+            } else {
+                localStorage.clear();
+                window.location.href = "/";
+            }
+
+        } catch (error) {
+            localStorage.clear();
+            window.location.href = "/";
+        }
+
+    }, []);
+
+
     return (
         <Routes>
 
-            {/* PUBLIC PAGES */}
+            {/* PUBLIC */}
             <Route path="/" element={<HomeRedirect />} />
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<ContactUs />} />
 
-            {/* STAFF LOGIN */}
+            {/* LOGIN */}
             <Route path="/login" element={<LoginPage />} />
 
-            {/* ADMIN DASHBOARD */}
-            {/* <Route path="/admin" element={<AdminPage />} /> */}
-            <Route path="/admin" element={
-                <PrivateRoute>
-                    <AdminPage />
-                </PrivateRoute>
-            }
+            {/* PROTECTED ROUTES */}
+            <Route
+                path="/admin"
+                element={
+                    <PrivateRoute>
+                        <AdminPage />
+                    </PrivateRoute>
+                }
             />
 
-            <Route path="/gate-scanner" element={
-                <PrivateRoute>
-                    <GateScanner />
-                </PrivateRoute>
-            } />
-            <Route path="/museum-scanner" element={
-                <PrivateRoute>
-                    <MuseumScanner />
-                </PrivateRoute>
-            } />
+            <Route
+                path="/gate-scanner"
+                element={
+                    <PrivateRoute>
+                        <GateScanner />
+                    </PrivateRoute>
+                }
+            />
 
-            {/* TICKET GENERATION */}
-            <Route path="/generate" element={<TicketGenerator />} />
+            <Route
+                path="/museum-scanner"
+                element={
+                    <PrivateRoute>
+                        <MuseumScanner />
+                    </PrivateRoute>
+                }
+            />
 
-            {/* SCANNER DEVICES */}
 
+            <Route
+                path="/generate" element={<TicketGenerator />}
+            />
 
         </Routes>
     );

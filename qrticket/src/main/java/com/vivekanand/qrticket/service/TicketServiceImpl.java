@@ -3,7 +3,6 @@ package com.vivekanand.qrticket.service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
@@ -59,6 +58,7 @@ public class TicketServiceImpl implements TicketService {
 
     private TicketInfo createTicket(TicketType type, TicketValidFor validFor,LocalDate visitDate) {
 
+    	
         String rawValue = UUID.randomUUID() + "-" + System.nanoTime();
         String qrHash = generateHash(rawValue);
 
